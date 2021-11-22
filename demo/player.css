@@ -1,0 +1,336 @@
+
+
+#page {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(32, 32, 32, 0.8);
+}
+#dummy {
+    flex: 1;
+}
+#wrapper
+{
+    flex: none;
+    margin-top: auto;
+    text-align: left;
+    margin: 0 auto;
+    padding: 0px;
+    border: solid 1px #f6f2f7;
+    width: 100%;
+    display: flex;
+    display: -webkit-flex;
+}
+#playing {
+    src: "pause.png";
+}
+.player_container
+{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    color: #f6f2f7;
+}
+#player {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    width: inherit;
+    height: max-content;
+    overflow: hidden;
+
+    padding: 5px;
+    padding-bottom: 0px;
+    background: rgba(16, 16, 16, 0.6);
+}
+@supports (backdrop-filter: none) {
+    body {
+        background: rgba(16, 16, 16, 0.6);
+        backdrop-filter: brightness(10%) blur(8px);
+    }
+}
+@supports (-webkit-backdrop-filter: none) {
+    body {
+        background: rgba(16, 16, 16, 0.6);
+        backdrop-filter: brightness(10%) blur(8px);
+        -webkit-backdrop-filter: brightness(10%) blur(8px);
+    }
+}
+
+#page_title {
+    color: #f6f2f7;
+    font-weight: bold;
+    text-align: center;
+}
+
+#track {
+    flex: 1 1 auto;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+    z-index: 1;
+}
+#track_info {
+    display: inline;
+}
+.track_header {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+.track_title {
+    font-weight: bolder;
+}
+.album_title {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    font-weight: normal;
+}
+#track img {
+    max-height: 20px;
+    margin-left: 2px;
+    margin-right: 5px;
+    margin-top: 2px;
+}
+input[type="image"]
+{
+    text-align: left;
+    margin-left: 2px;
+    margin-right: 5px;
+    margin-top: 2px;
+}
+#album_art {
+    flex-basis: content;
+    height: 100px;
+    width: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+}
+#track_list {
+    flex: 1 1 auto;
+    display: flex;
+    overflow-y: scroll;
+    flex-direction: column;
+    width: 100%;
+}
+.library_track {
+  flex: 1 1 auto;
+  display: flex;
+  display: -webkit-flex;
+  margin: 0 0 auto 0;
+  padding: 0;
+  width: 100%;
+  height: 6em;
+  min-height: 100px;
+  color: #f6f2f7;
+  border-bottom: solid 1px #f6f2f7;
+}
+.library_art {
+  flex-basis: content;
+  margin: 0;
+  max-height: 6em;
+  max-width: auto;
+}
+.library_track_info {
+  flex: 1 1 auto;
+  display: inline;
+}
+.library_track_header {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.library_track_title {
+  font-weight: bolder;
+}
+.library_track_artist {
+
+}
+.library_album_title {
+    margin-top: 2px;
+    font-weight: normal;
+}
+.library_track_control {
+  max-height: 30px;
+  margin-left: 2px;
+  margin-right: 5px;
+  margin-top: 2px;
+}
+.library_play_button {
+  max-height: 30px;
+  margin-left: 2px;
+  margin-right: 5px;
+  margin-top: 2px;
+}
+.library_track_links {
+  max-height: 20px;
+  margin-left: 2px;
+  margin-right: 5px;
+  margin-top: 2px;
+}
+.library_download_button {
+
+}
+
+
+#controls {
+    flex: 0 1 auto;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    flex-direction: row;
+    z-index: 1;
+}
+
+#trackSlider {
+    min-width: 200;
+    flex-basis: auto;
+    height: 10px;
+    border: solid 1px #f6f2f7;
+    color: transparent;
+    vertical-align: middle;
+    background-color: transparent;
+    cursor: pointer;
+    flex: 1 1 auto;
+    margin: 5px;
+    margin-top: 8px;
+}
+
+#trackProgress {
+    width: inherit;
+    height: 6px;
+    cursor: pointer;
+    background: white;
+}
+
+#controls input[type="image"] {
+    flex-basis: content;
+    margin: 5px;
+    max-width: 1.5em;
+    max-height: 1.5em;
+}
+#controls p {
+    font-family: 'Courier New', Courier, monospace;
+    margin: 5px;
+}
+
+#timestamp {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: normal;
+    line-height: normal;
+    margin: 5px;
+}
+
+#change_vol {
+    height: 30px;
+    width: 150px;
+    margin: 0 10 0 0;
+    color: #f6f2f7;
+}
+#vol_img
+{
+    margin: 5px 5px 5px 5px;
+    width: 20px;
+    height: 20px;
+}
+
+#volume {
+    margin-left: auto;
+}
+
+@media only screen and (max-width: 760px) {
+    #wrapper {
+        width: 100%;
+        min-height: 4rem;
+    }
+    #controls {
+        flex-direction: row;
+        flex-wrap: wrap;
+        font-size: small;
+    }
+    #volume {
+        display: none;
+    }
+}
+
+.fade-in {
+    animation: fadeIn ease 3s;
+    -webkit-animation: fadeIn ease 3s;
+    backdrop-filter: brightness(100%) blur(8px) !important;
+    -webkit-backdrop-filter: brightness(100%) blur(8px) !important;
+}
+@keyframes fadeIn {
+    0% {backdrop-filter: brightness(10%) blur(8px);}
+    100% {backdrop-filter: brightness(100%) blur(8px);}
+}
+@-webkit-keyframes fadeIn {
+    0% {-webkit-backdrop-filter: brightness(10%) blur(8px);}
+    100% {-webkit-backdrop-filter: brightness(100%) blur(8px);}
+}
+
+.fade-out {
+    animation: fadeOut ease 3s;
+    -webkit-animation: fadeOut ease 3s;
+}
+@keyframes fadeOut {
+    0% {backdrop-filter: brightness(100%) blur(8px);}
+    100% {backdrop-filter: brightness(10%) blur(8px);}
+}
+@-webkit-keyframes fadeOut {
+    0% {-webkit-backdrop-filter: brightness(100%) blur(8px);}
+    100% {-webkit-backdrop-filter: brightness(10%) blur(8px);}
+}
+
+
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+  }
+
+  input[type=range]:focus {
+    outline: none;
+  }
+
+  input[type=range]::-ms-track {
+    width: 100%;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 8px;
+    background: #f6f2f7;
+    cursor: pointer;
+    margin-top: -7px;
+  }
+
+  input[type=range]::-moz-range-thumb {
+    height: 20px;
+    width: 8px;
+    border-radius: 0;
+    border-color: #f6f2f7;
+    background: #f6f2f7;
+    cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: #f7e9fa;
+  }
+
+  input[type=range]:focus::-webkit-slider-runnable-track {
+    background:#d3c3d6;
+  }
+
+  input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: #f7e9fa;
+  }

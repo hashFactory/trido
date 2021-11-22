@@ -1,0 +1,412 @@
+
+<head>
+	<title>
+        Components to be used for the project
+    </title>
+	<meta name="viewport" charset="utf-8" content="width=device-width, initial-scale=1.0">
+	<link rel='icon' type='image/x-icon' href='/favicon.ico' />
+	<link href="main.css" rel="stylesheet" type="text/css" />
+    <link href="player.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="player.js"></script>
+    <script type="text/javascript">
+        var server = "http://leda.usbx.me:10956/htbin/submit.py";
+
+        function pushShader() {
+	        var inner = document.getElementById('editable').innerHTML;
+            var request = new XMLHttpRequest();
+	        request.open('POST', server, true);
+	        //var inner = document.getElementById('editable').innerHTML.replaceAll("<br>", "\n");
+            request.setRequestHeader('Access-Control-Allow-Origin', '*');
+            request.send(inner);
+            //fetch(server, {method: "POST", headers: {'Access-Control-Allow-Origin': '*'}, body: inner});
+        }
+    </script>
+        
+</head>
+ 
+<!-- Components -->
+
+<body>
+
+<!-- Beginning of post -->
+<div class="project">
+    <!-- Post title -->
+    <div class="project-title">
+        <h3 class="basic-link">Project description</h3>
+    </div>
+    <!-- Post contents -->
+    <p>This post contains the description of the project. Click on the rectangle to see the description.
+    </p>
+    <!-- Post gallery -->
+    <div>
+        <!-- Text post -->
+        <details class="border">
+            <summary>
+                Description
+            </summary>
+            <ul class="gallery">
+                <div style="white-space: pre-wrap; max-width: 720px; padding-left: 10px; padding-right: 10px"><h2>Project</h2>
+    A platform meant to facilitate collaboration and file sharing. Should be a file-sharing-first platform. Sort of blog-like where anybody can submit a post to a global feed that anyone on the server can view. People on the server can then reply to the post either with another rich-media comment or plain text.
+    This could be web only but it would be useful to have a mobile app as well for push notifications and being able to save media offline.<h4>Instances</h4>
+    Self hosted by users or hosted by us. Access should be restricted to invite-only by the server's owner. Everything should be customizable including css styling of all components. Maybe even specific to users within a server.
+    Possibility of also having each private server have a public-facing page (also stylized) that lets a group showcase work or ask for help within a specific area of expertise the group could use help with. Possibly make servers peer-discoverable.
+<h4>Posts</h4>Posts can contain any type of file or link (audio file, video, link, text, program-specific project files, zip, w/e) with additional text. Posts could be made to either showcase work, simply post for the sake of sharing it, or ask for comments / collaboration. Posts are displayed like blog entries in a main feed.
+
+<u>Display features:</u>
+[-] text
+     - pure text (maybe markdown or at least html/css)
+     - link + text
+[-] visual <i>(single or gallery)</i>
+     - images
+     - videos
+     - gifs
+[-] audio
+    - single track <i>(or album or playlist)</i>
+    - album
+    - playlist of files
+    - spotify (detect link and embed player(?))
+[-] files
+    - software project files (.psd, .als, .blend, etc...)
+    - .zip, .img, .iso, .w/e
+
+Make it easy to listen to audio with a click-once-and-let-play function.
+Everyone within the server should be able to comment.
+Comments should also be able to contain rich media.
+Can like / repost comments and posts.
+Tag posts using custom keywords (or by color).
+Tag @people in a post or comment to send them push notification.
+Can also subscribe to custom keyword tags to get notified.
+
+<h4>Business Model</h4><h5><u>Personal</u></h5>Acts as a mini social network.
+
+They host: <i>(free)</i>
+- users can choose to host their own instance free of charge
+- we just provide the software
+
+We host: <i>(free or paid)</i>
+- we host a free tier that places some restrictions on file size
+- provide paid tier the lets users post full-size files without restrictions
+    - subscription fee / month (maybe $10-20 range?)
+    - Apple Pay "pool" where everyone in the server participates and subscribes for $2/month to join
+        - must be easy to subscribe / unsub
+<h5><u>Professional</u></h5>
+Acts as a project tracker / easy dropoff colaboration platform.
+
+They host: <i>(paid)</i>
+- sold as a SaaS
+- like personal version with more specific project tracking functions
+
+We host: <i>(paid)</i>
+- sold as a SaaS
+- should be easy to spawn new instances on a per-project basis
+- also bill for storage costs
+                
+                </div>
+            </ul>
+        </details>
+        <p>
+        This page is still missing a lot of features and for now is mostly handcrafted from previous projects.
+        </p>
+        <div>
+            <!-- Text post -->
+            <details class="border">
+                <summary>TODO</summary>
+                <ul style="white-space: pre-wrap; max-width: 720px; padding-left: 10px; padding-right: 10px;" ><p style="color: lightgrey">[  ]  user accounts
+[  ]  ability to post
+    [  ]  upload files / media
+    [  ]  generate html from .md-like syntax
+[  ]  ability to post comments
+[  ]  tagging people
+[  ]  fix media player for multiple tracks
+[  ]  finish todo list</p></ul></details>
+    </div>
+       </div> 
+</div>
+
+<!-- Beginning of post -->
+<div class="project">
+    <!-- Post title -->
+    <div class="project-title">
+        <h3 class="basic-link">Editable fields!</h3>
+    </div>
+    <!-- Post contents -->
+    <p>Tap the button to save text. Anyone can edit!</p>
+    <!-- Text post -->
+    <div id="side"><input type="button" class="button" onclick="pushShader()" value="Update" /></div>
+    <p id="editable" contenteditable="true" class="border" style="color: lightgrey; width: 100%;">dwejfhiuwe</p>
+</div>
+
+<!-- Beginning of post -->
+<div class="project">
+    <!-- Post title -->
+    <div class="project-title">
+        <h3 class="basic-link">Bandcamp favs</h3>
+    </div>
+    <!-- Post contents -->
+    <p>While you're here might as well share some bandcamp albums. Click on the .zips to download.
+    </p>
+    <!-- Post gallery -->
+    <div>
+        <!-- Text post -->
+        <details class="border">
+            <summary>
+                List of albums
+            </summary>
+            <ul style="padding-left: 10px; padding-right: 10px">
+<div style="white-space: pre-wrap; max-width: 720px;"></div>
+
+<a class="basic-link" href="https://rawppl.bandcamp.com/album/raw-summer-hits-ii-special-edits">https://rawppl.bandcamp.com/album/raw-summer-hits-ii-special-edits</a>
+<br>
+<a class="basic-link" style="color: white; text-decoration: none;" href="albums/RAW - RAW Summer Hits II - Special Edits.zip">RAW - RAW Summer Hits II - Special Edits.zip</a>
+<details class="border" style="background-color: #1c131f">
+    <summary>
+        Fav tracks
+    </summary>
+    <ul>
+        <li>22. Geerson - Music</li>
+        <li>01. Chlär - Magalenha</li>
+        <li>05. JKS - Get Crackin'</li>
+        <li>09. Narciss - Physical</li>
+    </ul>
+</details>
+<br>
+
+<a class="basic-link" href="https://gutta.bandcamp.com/album/volume-two">https://gutta.bandcamp.com/album/volume-two</a>
+<br>
+<a class="basic-link" style="color: white; text-decoration: none;" href="albums/GUTTA - VOLUME TWO.zip">GUTTA - VOLUME TWO.zip</a>
+<details class="border" style="background-color: #1c131f">
+    <summary>
+        Fav tracks
+    </summary>
+    <ul>
+        <li>05. SOMETHING I CAN DANCE TO (2011)</li>
+        <li>07. DREAMY DRAGON.</li>
+        <li>08. PALM READER.</li>
+        <li>01. NO ONE KNOWS (GUTTA EDIT)</li>
+        <li>02. JESUS IS CLUB.</li>
+    </ul>
+</details>
+<br>
+
+<a class="basic-link" href="https://wearenthng.bandcamp.com/album/but-whatever-you-wanna-call-it">https://wearenthng.bandcamp.com/album/but-whatever-you-wanna-call-it</a>
+<br>
+<a class="basic-link" style="color: white; text-decoration: none;" href="albums/NTHNG - BUT WHATEVER YOU WANNA CALL IT.zip">NTHNG - BUT WHATEVER YOU WANNA CALL IT.zip</a>
+<details class="border" style="background-color: #1c131f">
+    <summary>
+        Fav tracks
+    </summary>
+    <ul>
+        <li>01. DUCTION</li>
+        <li>04. FEELINGS by Simbongile</li>
+        <li>05. SUNDAII</li>
+        <li>06. NO MO</li>
+        <li>08. SOUTHSIDE</li>
+    </ul>
+</details>
+<br>
+
+<a class="basic-link" href="https://fuklyfe.bandcamp.com/album/e-t-t-y-i-i">https://fuklyfe.bandcamp.com/album/e-t-t-y-i-i</a>
+<br>
+<a class="basic-link" style="color: white; text-decoration: none;" href="albums/𝕭 𝕰 𝕿 𝕿 𝖄 - ᗷ E T T Y I ᑎ ᗷ ᖇ ᗩ ᔕ I ᒪ.zip">𝕭 𝕰 𝕿 𝕿 𝖄 - ᗷ E T T Y I ᑎ ᗷ ᖇ ᗩ ᔕ I ᒪ.zip</a>
+<details class="border" style="background-color: #1c131f">
+    <summary>
+        Fav tracks
+    </summary>
+    <ul>
+        <li>15. minatauro (minotaur)</li>
+        <li>16. goodnight raquel (goodnight betty)</li>
+        <li>06. meu nome é betty (my name is betty</li>
+        <li>07. ela sabe (she knows</li>
+        <li>08. bandeira preta (black flag)</li>
+    </ul>
+</details>
+<br>
+
+<a class="basic-link" href="https://a-moitie-sourd.bandcamp.com/album/ams010-illegal-rap-1">https://a-moitie-sourd.bandcamp.com/album/ams010-illegal-rap-1</a>
+<br>
+<a class="basic-link" style="color: white; text-decoration: none;" href="albums/À Moitié Sourd - AMS010 - ILLEGAL - RAP 1.zip">À Moitié Sourd - AMS010.zip</a>
+<details class="border" style="background-color: #1c131f">
+    <summary>
+        Fav tracks
+    </summary>
+    <ul>
+        <li>03. AND DOLLA 1/2</li>
+        <li>02. TITIES 2/2</li>
+    </ul>
+</details>
+<br>
+
+<a class="basic-link" href="https://a-moitie-sourd.bandcamp.com/album/ams002-sandwich-triangle-its-a-trap">https://a-moitie-sourd.bandcamp.com/album/ams002-sandwich-triangle-its-a-trap</a>
+<br>
+<a class="basic-link" style="color: white; text-decoration: none;" href="albums/À Moitié Sourd - AMS002 - Sandwich Triangle - IT'\''S A TRAP !.zip">À Moitié Sourd - AMS002.zip</a>
+<details class="border" style="background-color: #1c131f">
+    <summary>
+        Fav tracks
+    </summary>
+    <ul>
+        <li>01. IT'S A TRAP ! FACE A</li>
+        <li>02. IT'S A TRAP ! FACE B</li>
+    </ul>
+</details><br>
+
+</div>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<!-- Beginning of post -->
+<div class="project">
+    <!-- Post title -->
+    <div class="project-title">
+        <h3 class="basic-link">This is a sample text + gallery post</h3>
+    </div>
+    <!-- Post contents -->
+    <p>The textual component should be able to contain text, links to other posts or www, keyword tags or people tags, etc... This post contains the text portion and a multi-width gallery featuring an image and two videos.
+    </p>
+    <!-- Post gallery -->
+    <div>
+        <!-- Text post -->
+        <details class="border">
+            <summary>
+                Example of a collapsible text component
+            </summary>
+            <ul class="gallery">
+                This merely contains sample text but you get the idea.
+            </ul>
+        </details>
+        <!-- Visual post -->
+        <details class="border">
+            <summary>
+                Example of a single width gallery
+            </summary>
+            <ul class="gallery">
+                <li style="flex-basis: 100%;">
+                    <li style="flex-basis: 100%;">
+                        <!-- Image -->
+                            <img src="http://leda.usbx.me:10958/trucs/project/demo/0194-fs8.png" title="frame_0194.png">
+                        <!-- Video -->
+                        <div>
+                        <video style="width: 49%" controls playsinline loop title="ez_small.mp4">
+                            <source src="http://leda.usbx.me:10958/trucs/ez_small.mp4" type="video/mp4">
+                                Your browser cannot play this video :(
+                        </video>
+                        <!-- Video -->
+                        <video style="width: 49%" controls playsinline loop title="out20_small2.mp4">
+                            <source src="http://leda.usbx.me:10958/trucs/out20_small2.mp4" type="video/mp4">
+                                Your browser cannot play this video :(
+                        </video>
+                        </div>
+                    </li>
+                </li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="project">
+    <!-- Post title -->
+    <div class="project-title">
+        <h3 class="basic-link">Audio and text post</h3>
+    </div>
+    <!-- Post contents -->
+    <p>This post contains a playable audio file.
+    </p>
+    <!-- Post gallery -->
+    <div>
+        <!-- Text post -->
+        <details class="border">
+            <summary>
+                Example of a collapsible text component containing an audio file as well
+            </summary>
+            <ul class="gallery">
+                This contains sample text
+                <br>
+                <!-- Music post -->
+                <div id="wrapper" style="margin-top: 10px">
+                    <img src="agar_agar_artwork_1.jpg" id="album_art" type='image/jpeg'>
+                    <div class='player_container'>
+                        <div id='player'>
+                            <div id='track'>
+                                <div id='track_info'>
+                                    <div class='track_header'><span class='track_title'>I'm That Guy</span> by <span class='track_artist'>Agar Agar</span></div>
+                                    <div class='album_title'>Cardan</div>
+                                </div>
+                                <div id='track_links'>
+                                <a href="agar_agar.m4a" download><img src="download_icon.png"></a>
+                            </div>
+                            </div>
+                            <div id="controls">
+                                <audio id="music_player">
+                                    <source class="music_src" src="agar_agar.m4a"/>
+                                </audio>
+                                <input type="image" src="play.png" id="play_button">
+                                <p id="timestamp" ondblclick="resetTrack()"></p>
+                                <div id='trackSlider' onmouseup="setSongPosition(this, event)" onclick="setSongPosition(this, event)">
+                                    <div id='trackProgress'></div>
+                                </div>
+                                <div id="volume">
+                                    <img src="volume.png" id="vol_img">
+                                    <input type="range" id="change_vol" onchange="change_vol()" step="0.01" min="0" max="1" value="0.8">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="project">
+    <!-- Post title -->
+    <div class="project-title">
+        <h3 class="basic-link">Random files
+        </h3>
+    </div>
+    <!-- Post contents -->
+    <p>This post contains a multitude of project files 
+    </p>
+    <!-- Post gallery -->
+    <div>
+        <!-- File post -->
+        <details class="border">
+            <summary>
+                Example of a gallery with project files + image
+            </summary>
+            <ul class="gallery">
+                <li style="flex-basis: 100%;">
+                    <li style="flex-basis: 100%;">
+                        <!-- file -->
+                        <li class="border" style="min-height: 100px">
+                            <a class="basic-link" href="me_living_2.zip">me_living_2.zip (87MB)</a>
+                            <br>Contains a .blend (open with Blender) and video file required for the project.
+                        </li>
+                        <!-- Image -->
+                            <img style="max-width: 100%; max-height: 50%;" src="http://leda.usbx.me:10958/trucs/project/demo/0587.png" title="0587.png">
+                    </li>
+                </li>
+            </ul>
+        </details>
+        <details class="border">
+            <summary>
+                Example of a gallery containing a photoshop .psd
+            </summary>
+            <ul class="gallery">
+                <li style="flex-basis: 100%;">
+                    <li style="flex-basis: 100%;">
+                        <!-- file -->
+                        <li class="border" style="min-height: 100px">
+                            <a class="basic-link" href="pattern2_inverted.psd">pattern2_inverted.psd (126MB)</a>
+                            <br>Contains the .psd producing the image below.
+                        </li>
+                        <!-- Image -->
+                            <img style="max-width: 100%; max-height: 50%;" src="http://leda.usbx.me:10958/trucs/project/demo/pattern2_inverted-fs8.png" title="pattern2_inverted-fs8.png">
+                    </li>
+                </li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+</body>
