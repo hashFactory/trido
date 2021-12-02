@@ -5,6 +5,7 @@
     "template_dir": "primitives/",
     "postmaps_dir": "content/postmaps/",
     "output_dir": "../demo3/",
+    "server": "http://127.0.0.1:8888/",
     "pages": [
         {
             "name": "home",

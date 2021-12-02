@@ -194,6 +194,7 @@ def generate_pages(future, macros):
                     html_buffer = html_buffer + f.read() + "\n"
 
             template = template.replace("|PROJECTS|", html_buffer)
+            template = template.replace("|SERVER|", settings['server'])
 
             # write to output file
             if not DRYRUN:
@@ -220,7 +221,7 @@ def read_site_map(filename):
         pages = json.load(f)
 
     # read in settings (there's got to be a better way of doing this)
-    fields = ['macros_file', 'publish_file', 'content_dir', 'template_dir', 'output_dir', 'postmaps_dir']
+    fields = ['macros_file', 'publish_file', 'content_dir', 'template_dir', 'output_dir', 'postmaps_dir', 'server']
     for f in fields:
         if pages.get(f):
             settings[f] = pages.get(f)
