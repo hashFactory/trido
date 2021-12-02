@@ -1,0 +1,35 @@
+<head>
+	<title>
+        Components to be used for the project
+    </title>
+    <!--<base href="http://leda.usbx.me:10956/">-->
+    <base href="http://127.0.0.1:8888/">
+	<meta name="viewport" charset="utf-8" content="width=device-width, initial-scale=1.0">
+	<link rel='icon' type='image/x-icon' href='/favicon.ico' />
+	<link href="main.css" rel="stylesheet" type="text/css" />
+    <link href="player.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="player.js"></script>
+    <script type="text/javascript">
+        //var server = "http://leda.usbx.me:10956/htbin/submit.py";
+        var server = "http://127.0.0.1:8888/htbin/submit.py";
+
+        function pushShader() {
+	        var inner = document.getElementById('editable').innerHTML;
+            var request = new XMLHttpRequest();
+	        request.open('POST', server, true);
+	        //var inner = document.getElementById('editable').innerHTML.replaceAll("<br>", "\n");
+            request.setRequestHeader('Access-Control-Allow-Origin', '*');
+            request.send(inner);
+            //fetch(server, {method: "POST", headers: {'Access-Control-Allow-Origin': '*'}, body: inner});
+        }
+    </script>
+        
+</head>
+ 
+<!-- Components -->
+
+<body>
+
+|PROJECTS|
+
+</body>

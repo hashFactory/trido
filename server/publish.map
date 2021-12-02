@@ -1,0 +1,6 @@
+{
+    "command": "scp",
+    "-i": "~/.ssh/id_trido",
+    "-P": "22",
+    "dst": "pp:project/"
+}

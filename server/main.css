@@ -71,7 +71,7 @@ header {
 
 .field {
     text-align: left;
-    width: 150px;
+    width: 100px;
     border: 2px solid #D0CCC5;
     font-weight: bold;
     -webkit-appearance: none !important;
@@ -407,6 +407,6 @@ section {
         color: #f6f2f7;
     }
     .basic-link {
-        color: #f7e9fa;
+        color: white;
     }
 }

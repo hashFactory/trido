@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 import sys
-import cgitb
-cgitb.enable()
+import cgi
 
+#form = cgi.FieldStorage()
 content = sys.stdin.read()
 #content = "testing testing"
 with open('template.html', 'r') as t:
     with open('components.html', 'w') as components:
         template = t.read()
+        #template = template.replace("|REPLACEME|", form['paragraph'].value)
         template = template.replace("|REPLACEME|", content)
         components.write(template)
         components.close()

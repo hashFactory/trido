@@ -1,0 +1,24 @@
+{
+    "macros_file": "macros.map",
+    "publish_file": "publish.map",
+    "content_dir": "content/",
+    "template_dir": "primitives/",
+    "postmaps_dir": "content/postmaps/",
+    "output_dir": "../demo3/",
+    "pages": [
+        {
+            "name": "home",
+            "type": "content",
+            "filename": "home.html",
+            "title": "Project Homepage"
+        }
+    ],
+    "include": [
+        "robots.txt",
+        "main.css",
+        "favicon.ico",
+        "assets/",
+        "media/",
+        "htbin/"
+    ]
+}

@@ -3,13 +3,16 @@
 	<title>
         Components to be used for the project
     </title>
+    <!--<base href="http://leda.usbx.me:10956/">-->
+    <base href="http://127.0.0.1:8888/">
 	<meta name="viewport" charset="utf-8" content="width=device-width, initial-scale=1.0">
 	<link rel='icon' type='image/x-icon' href='/favicon.ico' />
 	<link href="main.css" rel="stylesheet" type="text/css" />
     <link href="player.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="player.js"></script>
     <script type="text/javascript">
-        var server = "http://leda.usbx.me:10956/htbin/submit.py";
+        //var server = "http://leda.usbx.me:10956/htbin/submit.py";
+        var server = "http://127.0.0.1:8888/htbin/submit.py";
 
         function pushShader() {
 	        var inner = document.getElementById('editable').innerHTML;
@@ -120,7 +123,7 @@ We host: <i>(paid)</i>
 [  ]  fix media player for multiple tracks
 [  ]  finish todo list</p></ul></details>
     </div>
-       </div> 
+    </div> 
 </div>
 
 <!-- Beginning of post -->
@@ -132,25 +135,33 @@ We host: <i>(paid)</i>
     <!-- Post contents -->
     <p>Tap the button to save text. Anyone can edit!</p>
     <!-- Text post -->
-    <div id="side"><input type="button" class="button" onclick="pushShader()" value="Update" /></div>
-    <p id="editable" contenteditable="true" class="border" style="color: lightgrey; width: 100%;">|REPLACEME|</p>
-    <!-- -->
+    <div>
+        <!--
+        <form target="" action="http://leda.usbx.me:10956/htbin/submit.py" method="post">
+            <input name="paragraph" id="editable" type="text" class="border" style="color: lightgrey; width: 100%;">|REPLACEME|</input>
+            <input type="submit" class="button" onclick="pushShader()" value="Update" id="side"/>
+        </form>
+        -->
+        <div id="side"><input type="button" class="button" onclick="pushShader()" value="Update" /></div>
+        <p id="editable" contenteditable="true" class="border" style="color: lightgrey; width: 100%;">dwejfhiuwe</p>
+    </div>
+    <!-- HTML form -->
     <details class="border" style="background-color: #1c131f">
         <summary>
             Edit website colors
         </summary>
         <ul>
-            <form target="" action="http://leda.usbx.me:10956/htbin/resetcolors.py" method="post">
+            <form target="" action="htbin/resetcolors.py" method="post">
                 <input type="submit" class="button" value="Reset colors"><br>
             </form>
-            <form target="" action="http://leda.usbx.me:10956/htbin/colors.py" method="post" onsubmit="window.location.reload(true)">
+            <form target="" action="htbin/colors.py" method="post" onsubmit="window.location.reload(true)">
                 <label for="bgcolor">Background color: </label>
                 <input id="bgcolor" name="bgcolor" type="text" class="field" value="black"><br>
                 <label for="titlecolor">Title color: </label>
                 <input id="titlecolor" name="titlecolor" type="text" class="field" value="#f6f2f7"><br>
                 <label for="textcolor">Text color: </label>
                 <input id="textcolor" name="textcolor" type="text" class="field" value="#f7e9fa"><br><br>
-                <input action="http://leda.usbx.me:10956/htbin/colors.py" method="post" type="submit" class="button" value="Submit colors">
+                <input action="htbin/colors.py" method="post" type="submit" class="button" value="Submit colors">
             </form>
         </ul>
     </details>
