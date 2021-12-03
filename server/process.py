@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/python3
 import datetime
 
 import os
@@ -39,19 +39,19 @@ class FuturePage():
 # contains all info relevant to a post
 class Post:
     # all our useful fields
-    def __init__(self):
-        self.userid = ""
+    def __init__(self, userid="", title="", content=""):
+        self.userid = userid
         self.postid = 0
-        self.title = ""
-        self.content = ""
-        self.creationdate = datetime.datetime(2021, 1, 1).timestamp()
-        self.modifieddate = datetime.datetime(2021, 1, 1).timestamp()
+        self.title = title
+        self.content = content
+        self.creationdate = datetime.datetime.now().timestamp()
+        self.modifieddate = self.creationdate
         self.collection = ""
         self.tags = []
         self.files = []
         self.links = []
-        self.post_map_filename = ""
-        self.html_filename = ""
+        self.post_map_filename = str(self.creationdate) + ".map"
+        self.html_filename = str(self.creationdate) + ".html"
 
     # populate post from post map file
     def from_post_map(self, filename):
@@ -73,6 +73,7 @@ class Post:
             self.title = post_map.get("title")
             self.content = post_map.get("content")
             self.creationdate = post_map.get("creationdate")
+            self.modifieddate = post_map.get("modifieddate")
 
             # if verbose
             if V:
@@ -87,7 +88,8 @@ class Post:
 
     # writes post to html and returns it
     def to_html(self):
-        filename = settings["output_dir"] + settings["content_dir"] + "posts/" + str(self.creationdate) + ".html"
+        self.html_filename = str(self.creationdate) + ".html"
+        filename = settings["output_dir"] + settings["content_dir"] + "posts/" + self.html_filename
 
         # generate html
         new_post = get_primitive("post.html")
@@ -100,21 +102,34 @@ class Post:
                 html.write(new_post)
 
         # add new file location to global list
-        self.html_filename = filename
-        htmls[self.postid] = filename
+        htmls[self.postid] = self.html_filename
 
     # writes post to post map file
     def to_post_map(self):
-        filename = _outdir() + settings["content_dir"] + "posts/" + datetime.datetime.now().timestamp() + ".map"
+        self.post_map_filename = str(self.creationdate) + ".map"
+        filename = settings['output_dir'] + settings["content_dir"] + "postmaps/" + self.post_map_filename
 
         with open(filename, 'w', encoding='utf-8') as pm:
             if V:
                 print("Wrote \'" + self.title + "\' to " + filename)
-            json.dump(self, pm, encoding='utf-8')
+            json.dump(self.__dict__(), pm, skipkeys=True)
+        shutil.copy2(filename, filename.replace("postmaps", "backup_posts"))
 
     # returns string info
     def __str__(self):
         return self.userid + " (" + self.post_map_filename + "): " + self.title
+
+    # returns dict version of object
+    def __dict__(self):
+        return {
+            'userid': self.userid,
+            'postid': self.postid,
+            'title': self.title,
+            'content': self.content,
+            'creationdate': self.creationdate,
+            'modifieddate': self.modifieddate,
+            'collection': self.collection
+        }
 
 # defines what macros are available to a page
 class Macro():
@@ -129,6 +144,8 @@ class Macro():
 # return output dir as string
 def _outdir():
     global settings
+    #if len(settings.keys()) == 0:
+    #    read_macros_map('site.map')
     return settings['output_dir']
 
 # fetch the default template page
@@ -147,72 +164,71 @@ def get_primitive(primitive):
         primitive_template.close()
         return contents
 
+# fetch posts
+def get_num_posts():
+    return len([fi for fi in os.listdir(_outdir()) if fi.endswith(".map")])
+
 # generate html posts
-def post_map_to_html(future, macros):
-    global html_post_filenames, htmls
+def post_map_to_html(postmaps_dir):
+    global html_post_filenames, htmls, posts
 
     # fetch locations
-    post_map_files = [fi for fi in os.listdir(settings['postmaps_dir']) if fi.endswith(".map")]
+    post_map_files = [fi for fi in os.listdir(postmaps_dir) if fi.endswith(".map")]
     if V:
-        print("Found " + str(len(post_map_files)) + " post map files in " + settings['postmaps_dir'])
+        print("Found " + str(len(post_map_files)) + " post map files in " + postmaps_dir)
     primitive_post = open(settings['template_dir'] + 'post.html')
 
     # generate individual htmls
     for pmf in post_map_files:
         new_post = Post()
-        new_post.from_post_map(settings['postmaps_dir'] + pmf)
+        new_post.from_post_map(postmaps_dir + pmf)
         new_post.to_html()
         posts.append(new_post)
 
     # sort posts in chronological order
     #html_post_filenames = dict(sorted(html_post_filenames.items()))
-    posts.sort(key=lambda a: a.postid)
+    posts.sort(key=lambda a: a.creationdate)
 
     for p in posts:
         html_post_filenames.append(p.html_filename)
+    html_post_filenames.reverse()
     #html_post_filenames = htmls.
     #html_post_filenames = [value.html_filename for value in temp]
 
-# generates the new pages
-def generate_pages(future, macros):
-    global settings
+# generates the home page
+def generate_home_page():
+    global settings, html_post_filenames
 
-    for fu in future:
-        template = get_page("home.html")
-        with open(settings['template_dir'] + fu.filename, 'r') as content:
-            # modify template
-            """for m in range(1, 3):
-                template = template.replace(macros[m].name, open("templates/" + macros[m].filename, 'r').read())
-            template = template.replace("<|ARTICLE|>", content.read())
-            template = template.replace("<|TITLE|>", fu.title)"""
+    template = get_page("home.html")
+    # modify template
+    """for m in range(1, 3):
+        template = template.replace(macros[m].name, open("templates/" + macros[m].filename, 'r').read())"""
+    
+    # TODO: generalise with macros
+    html_buffer = ""
 
-            # TODO: generalise with macros
-            html_buffer = ""
+    for h in html_post_filenames:
+        with open(settings['output_dir'] + settings['content_dir'] + "posts/" + h, 'r', encoding='utf-8') as f:
+            html_buffer = html_buffer + f.read() + "\n"
 
-            for p in posts:
-                with open(p.html_filename, 'r', encoding='utf-8') as f:
-                    html_buffer = html_buffer + f.read() + "\n"
+    template = template.replace("|PROJECTS|", html_buffer)
+    #template = template.replace("|SUBMIT|", open('submitpost.html').read())
+    template = template.replace("|SERVER|", settings['server'])
+    template = template.replace("|RANDOM|", str(datetime.datetime.now()))
 
-            template = template.replace("|PROJECTS|", html_buffer)
-            template = template.replace("|SERVER|", settings['server'])
+    with open(settings['output_dir'] + 'projects.html', 'w', encoding='utf-8') as p:
+        p.write(html_buffer)
 
-            # write to output file
-            if not DRYRUN:
-                with open(settings['output_dir'] + fu.filename, 'w', encoding='utf-8') as future_page:
-                    future_page.write(template)
-                    future_page.close()
-            
-            # output html contents if the user wants
-            if V:
-                print("Populated home.html")
-            content.close()
-"""
-def process(r1):
-    with open(r1, 'r', encoding='utf-8') as f:
-        input = f.read()
-        with open(str(datetime.datetime.now().timestamp()) + ".map", 'w', encoding='utf-8') as f2:
-            json.dump(input, f2)
-"""
+    # write to output file
+    if not DRYRUN:
+        with open(settings['output_dir'] + 'home.html', 'w', encoding='utf-8') as future_page:
+            future_page.write(template)
+            future_page.close()
+    
+    # output html contents if the user wants
+    if V:
+        print("Populated home.html")
+
 # read the pages json into an object
 def read_site_map(filename):
     global settings
@@ -337,7 +353,7 @@ def compile(future):
     global settings
     macros = read_macros_map(settings['macros_file'])
     settings['output_dir'] = ''
-    generate_pages(future, macros)
+    generate_home_page()
 
 # include files and directories
 def export_include():
@@ -376,22 +392,24 @@ def export_include():
             if V:
                 print("Copying " + i + " to " + output + i)
             shutil.copy2(i, output)
+    # copy a backup of default post maps
+    shutil.copytree(settings['postmaps_dir'], settings['output_dir'] + 'content/defaultposts/', dirs_exist_ok=True)
+    os.makedirs(settings['output_dir'] + 'content/backup_posts', exist_ok=True)
 
 # export compiled site to specified directory
 def export(future):
     global settings
     macros = read_macros_map(settings['macros_file'])
-    #if os.path.exists(settings['output_dir']):
-    #    shutil.rmtree(settings['output_dir'])
+
     if not os.path.exists(settings['output_dir']):
         os.mkdir(settings['output_dir'])
-    if not os.path.exists(settings['output_dir'] + "content"):
-        os.mkdir(settings['output_dir'] + "content")
-    if not os.path.exists(settings['output_dir'] + "content/posts"):
-        os.mkdir(settings['output_dir'] + "content/posts")
+    if not os.path.exists(settings['output_dir'] + settings['content_dir']):
+        os.mkdir(settings['output_dir'] + settings['content_dir'])
+    if not os.path.exists(settings['output_dir'] + settings['content_dir'] + "/posts"):
+        os.mkdir(settings['output_dir'] + settings['content_dir'] + "/posts")
     
-    post_map_to_html(future, macros)
-    generate_pages(future, macros)
+    post_map_to_html(settings['postmaps_dir'])
+    generate_home_page()
     export_include()
 
 # uses export to publish website using publish_file directive
@@ -459,14 +477,17 @@ def main(args):
         clean(future)
     elif args.command == 'compile':
         if check_if_user_compile():
-            compile(future)
+            settings['output_dir'] = ''
+            export(future)
         else:
             print("Exiting...")
     elif args.command == 'dryrun':
         DRYRUN = True
-        compile(future)
+        export(future)
     elif args.command == 'export':
         export(future)
+        if V:
+            print("Run with: cd " + settings['output_dir'] + "; python3 -m http.server --cgi " + ''.join(filter(str.isdigit, settings['server'].split(':')[-1])))
     elif args.command == 'publish':
         publish(future)
 
@@ -496,3 +517,11 @@ if __name__ == '__main__':
     # send all to main
     args = parser.parse_args()
     main(args)
+
+"""
+def process(r1):
+    with open(r1, 'r', encoding='utf-8') as f:
+        input = f.read()
+        with open(str(datetime.datetime.now().timestamp()) + ".map", 'w', encoding='utf-8') as f2:
+            json.dump(input, f2)
+"""

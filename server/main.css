@@ -46,16 +46,31 @@ header {
 /* project */
 .project {
     border-bottom: 1px dashed darkgray;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding-bottom: 20px;
     margin-left: 10px;
     margin-right: 10px;
 }
-
+#submit-area {
+    bottom: 0;
+    position: fixed;
+    width: 100%;
+}
 .project details {
     margin-bottom: 10px;
 }
-
+.project form {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.project textarea {
+    max-width: 100%;
+    min-width: 100%;
+    min-height: 2cm;
+}
+.project br {
+    padding: 10px;
+}
 .button {
     text-align: center;
     width: 100%;
@@ -64,20 +79,17 @@ header {
     padding: 1px;
     border-style: solid #D0CCC5;
     font-weight: bold;
-    -webkit-appearance: none !important;
     color: #D0CCC5;
     background-color: black;
 }
 
 .field {
     text-align: left;
-    width: 100px;
+    width: 200px;
     border: 2px solid #D0CCC5;
     font-weight: bold;
-    -webkit-appearance: none !important;
     color: #D0CCC5;
     background-color: black;
-
 }
 
 #side {
@@ -394,6 +406,9 @@ section {
     p {
         color: white;
     }
+    .project-body {
+        color: white;
+    }
     h3 {
         color: #f6f2f7;
     }
@@ -401,12 +416,12 @@ section {
         color: #f6f2f7;
     }
     .playlist-page-header {
-        color: white;
+        color: #f7e9fa;
     }
     .playlist-title {
         color: #f6f2f7;
     }
     .basic-link {
-        color: white;
+        color: #f7e9fa;
     }
 }
