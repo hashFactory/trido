@@ -1,25 +1,28 @@
 #!/usr/bin/python3
 import sys
 import cgi
+import cgitb
+cgitb.enable()
+import json
+import process as sp
 
 form = cgi.FieldStorage()
+colors = {}
 
-bgcolor = form["bgcolor"].value
-titlecolor = form["titlecolor"].value
-textcolor = form["textcolor"].value
+colors["|BGCOLOR|"] = form["bgcolor"].value
+colors["|TITLECOLOR|"] = form["titlecolor"].value
+colors["|TEXTCOLOR|"] = form["textcolor"].value
+colors["|BOXCOLOR|"] = form["boxcolor"].value
 
-with open("colors.txt", 'w') as data:
-    data.write(bgcolor + "\n" + titlecolor + "\n" + textcolor + "\n")
+with open("primitives/colors.map", 'w') as data:
+    json.dump(dict(colors), data)
     data.close()
 
-with open("maintemplate.css", "r") as template:
-    with open("main.css", "w") as maincss:
-        css = template.read()
-        css = css.replace("black", bgcolor)
-        css = css.replace("#f6f2f7", titlecolor)
-        css = css.replace("#f7e9fa", textcolor)
-        maincss.write(css)
-        maincss.close()
-    template.close()
+sp.read_site_map('site.map')
+sp.settings['output_dir'] = ''
+sp.post_map_to_html(postmaps_dir="content/postmaps/")
+sp.generate_home_page()
 
-print("Access-Control-Allow-Origin: *\r\n")
+print("Access-Control-Allow-Origin: *")
+print("Content-Type: text/html\r\n")
+print(open('home.html').read())

@@ -2,11 +2,18 @@
 import sys
 import cgi
 
-with open("maintemplate.css", "r") as template:
-    with open("main.css", "w") as maincss:
-        css = template.read()
-        maincss.write(css)
-        maincss.close()
-    template.close()
+import json
+import process as sp
 
-print("Access-Control-Allow-Origin: *\r\n")
+with open("primitives/defaultcolors.map", 'r') as defaultcolors:
+    with open("primitives/colors.map", 'w') as data:
+        json.dump(json.load(defaultcolors), data)
+
+sp.read_site_map('site.map')
+sp.settings['output_dir'] = ''
+sp.post_map_to_html(postmaps_dir="content/postmaps/")
+sp.generate_home_page()
+
+print("Access-Control-Allow-Origin: *")
+print("Content-Type: text/html\r\n")
+print(open('home.html').read())

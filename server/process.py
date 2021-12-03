@@ -211,6 +211,19 @@ def generate_home_page():
         with open(settings['output_dir'] + settings['content_dir'] + "posts/" + h, 'r', encoding='utf-8') as f:
             html_buffer = html_buffer + f.read() + "\n"
 
+    # update css
+    with open("primitives/colors.map", 'r') as data:
+        colors = json.load(data)
+    
+    with open("primitives/maintemplate.css", "r") as csstemplate:
+        with open("main.css", "w") as maincss:
+            css = csstemplate.read()
+            for k, v in colors.items():
+                print(str(k) + ", " + str(v))
+                css = css.replace('\"' + k + '\"', v)
+                html_buffer = html_buffer.replace(k, v)
+            maincss.write(css)
+
     template = template.replace("|PROJECTS|", html_buffer)
     #template = template.replace("|SUBMIT|", open('submitpost.html').read())
     template = template.replace("|SERVER|", settings['server'])
