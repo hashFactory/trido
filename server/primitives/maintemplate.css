@@ -77,24 +77,24 @@ header {
     height: auto;
     font-size: 100%;
     padding: 1px;
-    border-style: solid #D0CCC5;
+    border-style: solid "|TEXTCOLOR|";
     font-weight: bold;
-    color: #D0CCC5;
-    background-color: black;
+    color: "|TEXTCOLOR|";
+    background-color: "|BGCOLOR|";
 }
 
 .field {
     text-align: left;
     width: 200px;
-    border: 2px solid #D0CCC5;
+    border: 2px solid "|TEXTCOLOR|";
     font-weight: bold;
-    color: #D0CCC5;
-    background-color: black;
+    color: "|TEXTCOLOR|";
+    background-color: "|BGCOLOR|";
 }
 .colorfield {
     width: 150px;
-    border: 1px solid #D0CCC5;
-    background-color: black;
+    border: 1px solid "|TEXTCOLOR|";
+    background-color: "|BGCOLOR|";
 }
 
 #side {

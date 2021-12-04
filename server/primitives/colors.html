@@ -1,0 +1,26 @@
+<div>
+  <div>
+  <form method="POST">
+    <button style="width: 49% !important;" formaction="|SERVER|htbin/resetcolors.py" class="button">Reset colors</button>
+    <button style="width: 49% !important;" formaction="|SERVER|htbin/randomcolors.py" class="button">Random colors</button>
+  </form>
+  </div>
+  <details class="border">
+    <summary>
+      Expand to set website colors
+    </summary>
+    <ul style="padding-left: 0px">
+      <form action="|SERVER|htbin/colors.py" method="POST">
+        <label for="bgcolor">Background color: </label>
+        <input id="bgcolor" name="bgcolor" type="color" class="colorfield" value="|BGCOLOR|"/><br>
+        <label for="titlecolor">Title color: </label>
+        <input id="titlecolor" name="titlecolor" type="color" class="colorfield" value="|TITLECOLOR|"/><br>
+        <label for="textcolor">Text color: </label>
+        <input id="textcolor" name="textcolor" type="color" class="colorfield" value="|TEXTCOLOR|"/><br>
+        <label for="boxcolor">Box color: </label>
+        <input id="boxcolor" name="boxcolor" type="color" class="colorfield" value="|BOXCOLOR|"/><br><br>
+        <button class="button">Submit</button>
+      </form>
+    </ul>
+  </details>
+</div>
