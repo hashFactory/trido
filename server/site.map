@@ -4,8 +4,8 @@
     "content_dir": "content/",
     "template_dir": "primitives/",
     "postmaps_dir": "content/postmaps/",
-    "output_dir": "../demo3/",
-    "server": "http://192.168.1.17:8888/",
+    "output_dir": "../demo5/",
+    "server": "http://192.168.1.17:8890/",
     "pages": [
         {
             "name": "home",
@@ -23,8 +23,10 @@
         "htbin/",
         "process.py",
         "site.map",
+        "macros.map",
         "primitives/",
         "content/postmaps/",
-        "submitpost.html"
+        "submitpost.html",
+        "serve.py"
     ]
 }
