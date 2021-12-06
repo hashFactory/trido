@@ -10,6 +10,7 @@ import subprocess
 import random
 from string import hexdigits
 from pathlib import Path
+from urllib import parse
 
 import time
 
@@ -294,6 +295,12 @@ class Trido:
         # get what must be included
         if self.pages.get('include'):
             self.s['include'] = self.pages.get('include')
+
+        # get server info
+        server_info = parse.urlparse(self.s['server'])
+
+        self.s["port"] = server_info.port
+        self.s["hostname"] = server_info.hostname
 
         future = []
 
