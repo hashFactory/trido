@@ -38,12 +38,10 @@ class ProjectRequestHandler(CGIHTTPRequestHandler):
             filename = os.path.split(self.path)[1]
             trido.handle_post(filename, form)
             
-            self.send_response(200)
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.send_header("Content-type", "text/html")
+            self.send_response(303)
+            self.send_header("Location", trido.s['server'])
             self.end_headers()
-
-            self.wfile.write(open('home.html', 'rb').read())
+            #self.send_response_only()
 
 if __name__ == '__main__':
     with ThreadingHTTPServer(address, ProjectRequestHandler) as httpd:
