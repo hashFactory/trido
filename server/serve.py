@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from http.server import SimpleHTTPRequestHandler, HTTPServer, CGIHTTPRequestHandler
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer, CGIHTTPRequestHandler
 from process import *
 import urllib.parse
 
@@ -46,7 +46,7 @@ class ProjectRequestHandler(CGIHTTPRequestHandler):
             self.wfile.write(open('home.html', 'rb').read())
 
 if __name__ == '__main__':
-    with HTTPServer(address, ProjectRequestHandler) as httpd:
+    with ThreadingHTTPServer(address, ProjectRequestHandler) as httpd:
         try:
             httpd.serve_forever()
         except:
