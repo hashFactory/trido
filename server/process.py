@@ -8,6 +8,7 @@ import argparse
 import shutil
 import subprocess
 import random
+from string import hexdigits
 from pathlib import Path
 
 import time
@@ -165,7 +166,10 @@ class Trido:
         # randomcolors.py
         elif rt == 'randomcolors.py':
             fields = ['|BGCOLOR|', '|TITLECOLOR|', '|TEXTCOLOR|', '|BOXCOLOR|']
-            colors = [(f, '#' + random.randbytes(3).hex()) for f in fields]
+            # only python 3.9+ :\
+            #colors = [(f, '#' + random.randbytes(3).hex()) for f in fields]
+            # python 3.7 fix
+            colors = [(f, '#' + ''.join([random.choice(hexdigits) for n in range(6)])) for f in fields]
 
             with open("primitives/colors.map", 'w') as data:
                 json.dump(dict(colors), data)
@@ -251,7 +255,8 @@ class Trido:
                     css = css.replace('\"' + k + '\"', v)
                     html_buffer = html_buffer.replace(k, v)
                 maincss.write(css)
-
+                # TODO: temp speedup css
+                template = template.replace("|MAINCSS|", css, 1)
         template = template.replace("|PROJECTS|", html_buffer)
         #template = template.replace("|SUBMIT|", open('submitpost.html').read())
         template = template.replace("|SUBMIT|", "")
