@@ -4,8 +4,8 @@
     "content_dir": "content/",
     "template_dir": "primitives/",
     "postmaps_dir": "content/postmaps/",
-    "output_dir": "../demo5/",
-    "server": "http://192.168.1.17:8890/",
+    "output_dir": "../local/",
+    "server": "http://192.168.1.17:8800/",
     "pages": [
         {
             "name": "home",

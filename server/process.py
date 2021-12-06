@@ -92,6 +92,9 @@ class Post:
         new_post = new_post.replace("|TITLE|", self.title)
         new_post = new_post.replace("|POSTCONTENTS|", self.content)
 
+        # TODO: img lazy loading (remove later)
+        new_post = new_post.replace("<img ", "<img loading=\"lazy\" ")
+
         # write to html file
         if not DRYRUN:
             with open(filename, 'w') as html:
@@ -443,7 +446,7 @@ class Trido:
 
         # compile website
         if V:
-            print("Compiling according to " + self.s['site_map'] + " ...")
+            print("Compiling according to " + 'site.map' + " ...")
         self.export(future)
         if V:
             print("Done compiling")
@@ -521,7 +524,7 @@ def main(args):
         trido.clean(trido.s)
     elif args.command == 'compile':
         if check_if_user_compile():
-            trido.s['output_dir'] = ''
+            trido.s['output_dir'] = './'
             trido.export(trido.s)
         else:
             print("Exiting...")
