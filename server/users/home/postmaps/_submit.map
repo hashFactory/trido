@@ -1,0 +1,13 @@
+{
+    "userid": "home",
+    "postid": "_submit",
+    "title": "Create an account!",
+    "content": 
+    "    <!-- Post contents -->\n    <p>You can now create personal user accounts! Fill out the title and your new pseudonym and then fill the text box with either plaintext or html!</p>\n   <details class=\"border\">\n        <summary>\n            Expand to write a post\n        </summary>\n        <ul style=\"padding-left: 0px\">\n            <form action=\"|SERVER|api/home/resetposts.py\" method=\"POST\">\n                <button class=\"button\">Reset posts</button>\n            </form>\n            <form action=\"|SERVER|api/home/submitpost.py\" method=\"POST\">\n                <label for=\"title\">Title: </label>\n                <input id=\"title\" name=\"title\" type=\"text\" class=\"field\" /><br>\n                <label for=\"userid\">Name: </label>\n                <input id=\"userid\" name=\"userid\" type=\"text\" class=\"field\" /><br>\n                <label for=\"content\">Contents: </label>\n                <textarea id=\"content\" name=\"content\" type=\"text\" class=\"border\" style=\"width: 100%; min-height: 2cm; \"></textarea><br><br>\n                <!-- <input type=\"submit\" class=\"button\" onclick=\"setTimeout(window.location.reload(true), 400);\" value=\"Submit post\" target=\"uselessFrame\"/> -->\n                <button class=\"button\">Submit</button>\n            </form>\n            <iframe name=\"uselessFrame\" width=\"0px\" height=\"0px\" hidden=\"true\"></iframe>\n        </ul>\n    </details>"
+    ,"creationdate": 1638488125.988932,
+    "modifieddate": 1638488125.988932,
+    "collection": "",
+    "tags": [],
+    "files": [],
+    "links": []
+}

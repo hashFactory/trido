@@ -1,8 +1,8 @@
 <div>
   <div>
   <form method="POST">
-    <button style="width: 49% !important;" formaction="|SERVER|htbin/resetcolors.py" class="button">Reset colors</button>
-    <button style="width: 49% !important;" formaction="|SERVER|htbin/randomcolors.py" class="button">Random colors</button>
+    <button style="width: 49% !important;" formaction="|SERVER|/api/|USER|/resetcolors.py" class="button">Reset colors</button>
+    <button style="width: 49% !important;" formaction="|SERVER|/api/|USER|/randomcolors.py" class="button">Random colors</button>
   </form>
   </div>
   <details class="border">
@@ -10,7 +10,7 @@
       Expand to set website colors
     </summary>
     <ul style="padding-left: 0px">
-      <form action="|SERVER|htbin/colors.py" method="POST">
+      <form action="|SERVER|/api/|USER|/colors.py" method="POST">
         <label for="bgcolor">Background color: </label>
         <input id="bgcolor" name="bgcolor" type="color" class="colorfield" value="|BGCOLOR|"/><br>
         <label for="titlecolor">Title color: </label>

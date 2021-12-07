@@ -11,14 +11,14 @@
             Expand to write a post
         </summary>
         <ul>
-            <form action="|SERVER|htbin/resetposts.py" method="POST">
+            <form action="|SERVER|api/|USER|/resetposts.py" method="POST">
                 <button class="button">Reset posts</button>
             </form>
-            <form action="|SERVER|htbin/submitpost.py" method="POST">
+            <form action="|SERVER|api/|USER|/submitpost.py" method="POST">
                 <label for="title">Title: </label>
                 <input id="title" name="title" type="text" class="field" /><br>
                 <label for="userid">Name: </label>
-                <input id="userid" name="userid" type="text" class="field" /><br>
+                <input id="userid" name="userid" type="text" class="field" value="|USER|"/><br>
                 <label for="content">Contents: </label>
                 <textarea id="content" name="content" type="text" class="border"></textarea><br><br>
                 <!-- <input type="submit" class="button" onclick="setTimeout(window.location.reload(true), 400);" value="Submit post" target="uselessFrame"/> -->

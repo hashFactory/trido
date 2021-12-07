@@ -37,12 +37,12 @@ class FuturePage:
 class Post:
     # all our useful fields
     def __init__(self, userid="", title="", content=""):
-        self.userid = userid
-        self.postid = 0
-        self.title = title
-        self.content = content
+        self.userid: str = userid
+        self.title: str = str(title)
+        self.content: str = content
         self.creationdate = datetime.datetime.now().timestamp()
         self.modifieddate = self.creationdate
+        self.postid = self.creationdate
         self.collection = ""
         self.tags = []
         self.files = []
@@ -64,9 +64,10 @@ class Post:
                 post_map = json.load(j, strict=False)
 
             # TODO: properly convert markdown to html
+            # TODO: convert links
             # read in fields
             self.userid = post_map.get("userid")
-            self.postid = int(post_map.get("postid"))
+            self.postid = post_map.get("postid")
             self.title = post_map.get("title")
             self.content = post_map.get("content")
             self.creationdate = post_map.get("creationdate")
@@ -85,7 +86,7 @@ class Post:
 
     # writes post to html and returns it
     def to_html(self, output_dir="content/posts/", template_dir="primitives/"):
-        self.html_filename = str(self.creationdate) + ".html"
+        self.html_filename = str(self.postid) + ".html"
         filename = output_dir + self.html_filename
 
         # generate html
@@ -105,15 +106,15 @@ class Post:
         return self.html_filename
 
     # writes post to post map file
-    def to_post_map(self, output_dir="content/postmaps/"):
+    def to_post_map(self, users_dir="users/"):
         self.post_map_filename = str(self.creationdate) + ".map"
-        filename = output_dir + self.post_map_filename
+        filename = users_dir + self.userid + "/postmaps/" + self.post_map_filename
 
         with open(filename, 'w', encoding='utf-8') as pm:
             if V:
                 print("Wrote \'" + self.title + "\' to " + filename)
             json.dump(self.__dict__(), pm, skipkeys=True)
-        shutil.copy2(filename, filename.replace("postmaps", "backup_posts"))
+        shutil.copy2(filename, filename.replace("/postmaps/", "/backup_posts/"))
 
     # returns string info
     def __str__(self):
@@ -122,14 +123,136 @@ class Post:
     # returns dict version of object
     def __dict__(self):
         return {
-            'userid': self.userid,
-            'postid': self.postid,
-            'title': self.title,
-            'content': self.content,
+            'userid': str(self.userid),
+            'postid': str(self.postid),
+            'title': str(self.title),
+            'content': str(self.content),
             'creationdate': self.creationdate,
             'modifieddate': self.modifieddate,
             'collection': self.collection
         }
+
+# defines a user
+class User:
+    def __init__(self, userid="", username=""):
+        self.userid: str = userid
+        self.username: str = username
+        self.creationdate = datetime.datetime.now().timestamp()
+        self.postlist: [str] = []
+        self.user_map_filename: str = ""
+        self.homepage: str = ""
+        self.colors = {}
+
+    # populate info from .map file
+    def from_user_map(self, filename):
+        self.user_map_filename = filename
+
+        # deserialize json
+        with open(self.user_map_filename, 'r', encoding='UTF-8') as j:
+            user_map = json.load(j, strict=False)
+
+        # read in relevant fields
+        self.userid = user_map.get("userid")
+        self.username = user_map.get("username")
+        self.creationdate = user_map.get("creationdate")
+        self.postlist = user_map.get("postlist")
+        self.homepage = self.userid + ".html"
+
+        return self
+
+    def to_html(self, output_dir="content/users/", template_dir="primitives/"):
+        pass
+
+    # write user map
+    def to_user_map(self, users_dir="users/"):
+        self.user_map_filename = str(self.username) + ".map"
+        filename = users_dir + self.userid + "/" + self.user_map_filename
+
+        with open(filename, 'w', encoding='utf-8') as um:
+            if V:
+                print("Wrote user \'" + self.username + "\' to " + filename)
+            json.dump(self.__dict__(), um, skipkeys=True)
+        #shutil.copy2(filename, filename.replace("postmaps", "backup_posts"))
+
+    # add post to user list
+    def add_post(self, postid):
+        self.postlist.append(postid)
+
+    # reset posts
+    def reset_posts(self):
+        self.postlist: [str] = []
+
+    def __dict__(self):
+        return {
+            'userid': self.userid,
+            'username': self.username,
+            'creationdate': self.creationdate,
+            'postlist': self.postlist
+        }
+
+class Posts:
+    def __init__(self):
+        self.posts = {}
+
+    def add(self, post: Post):
+        if post:
+            self.posts[post.postid] = post
+
+    def get(self, postid=""):
+        """for p in self.posts:
+            if p.postid == postid:
+                return p"""
+        if postid in self.posts.keys():
+            return self.posts.get(postid)
+        else:
+            print("Could not find post with id=" + postid)
+
+        return None
+
+class Users:
+    def __init__(self, users_dir="users/"):
+        self.users: [User] = []
+
+    # creates relevant directories but doesn't add it to main list
+    def create_user(self, s: dict, userid):
+        #os.mkdir(s["output_dir"] + s["postmaps_dir"] + userid)
+        os.makedirs(s["output_dir"] + s["content_dir"] + "posts/" + userid, exist_ok=True)
+
+        os.makedirs(s["output_dir"] + s["users_dir"] + userid, exist_ok=True)
+        os.makedirs(s["output_dir"] + s["users_dir"] + userid + "/postmaps/", exist_ok=True)
+        os.makedirs(s["output_dir"] + s["users_dir"] + userid + "/backup_posts/", exist_ok=True)
+
+        shutil.copy2(s["template_dir"] + "colors.map", s["output_dir"] + s["users_dir"] + userid + "/colors.map")
+        shutil.copy2(s["template_dir"] + "colors.map", s["output_dir"] + s["users_dir"] + userid + "/colors.map")
+
+        user = User(userid=userid, username=userid)
+        if V:
+            print("Created user!")
+        return user
+
+    # repopulates user with default posts
+    def reset_user_posts(self, s: dict, userid=""):
+        pass
+        # delete posts and replace with originals
+        #shutil.rmtree('content/' + userid + '/postmaps/')
+        #shutil.rmtree('content/' + userid + '/posts/')
+        #shutil.copytree('content/defaultposts/', 'content/postmaps')
+
+        #shutil.copytree('content/defaultposts/', 'content/postmaps')
+
+    # check if username is already taken
+    def check_if_user_exists(self, userid=""):
+        for u in self.users:
+            if u.userid == userid:
+                return True
+        return False
+
+    # fetch user by id
+    def get_user_by_id(self, userid=""):
+        for u in self.users:
+            if u.userid == userid:
+                return u
+
 
 # defines what macros are available to a page
 class Macro:
@@ -144,70 +267,110 @@ class Macro:
 class Trido:
     def __init__(self, site_map='site.map'):
         self.s = {}
-        self.posts = []
-        self.html_post_filenames = []
+        self.posts = Posts()
+        self.users = Users()
+        self.home_filenames = []
         self.htmls = {}
         self.files = {}
         self.read_site_map(site_map)
+        self.init_users()
+
+    # parse api url
+    def parse_api(self, url: str):
+        split = url.split('/')
+
+        if len(split) > 3:
+            if split[1] == 'api':
+                return split[2], split[3]
 
     # handles cgi post requests
-    def handle_post(self, rt: str, form: dict):
+    def handle_post_request(self, rt: (str, str), form: dict):
+        redirect = "user/" + rt[0]
+        if rt[0] == 'home':
+            redirect = ""
+
         # resetcolors.py
-        if rt == 'resetcolors.py':
+        if rt[1] == 'resetcolors.py':
             # read in from default colors map
             with open("primitives/defaultcolors.map", 'r') as defaultcolors:
-                with open("primitives/colors.map", 'w') as data:
+                with open("users/" + rt[0] + "/colors.map", 'w') as data:
                     json.dump(json.load(defaultcolors), data)
+            self.generate_user_homepage(rt[0])
+            return redirect
 
         # colors.py
-        elif rt == 'colors.py':
+        elif rt[1] == 'colors.py':
             colors = {"|BGCOLOR|": form["bgcolor"][0], "|TITLECOLOR|": form["titlecolor"][0],
                       "|TEXTCOLOR|": form["textcolor"][0], "|BOXCOLOR|": form["boxcolor"][0]}
 
-            with open("primitives/colors.map", 'w') as data:
+            with open("users/" + rt[0] + "/colors.map", 'w') as data:
                 json.dump(dict(colors), data)
 
+            self.generate_user_homepage(rt[0])
+            return redirect
+
         # randomcolors.py
-        elif rt == 'randomcolors.py':
+        elif rt[1] == 'randomcolors.py':
             fields = ['|BGCOLOR|', '|TITLECOLOR|', '|TEXTCOLOR|', '|BOXCOLOR|']
             # only python 3.9+ :\
             #colors = [(f, '#' + random.randbytes(3).hex()) for f in fields]
             # python 3.7 fix
             colors = [(f, '#' + ''.join([random.choice(hexdigits) for n in range(6)])) for f in fields]
 
-            with open("primitives/colors.map", 'w') as data:
+            with open("users/" + rt[0] + "/colors.map", 'w') as data:
                 json.dump(dict(colors), data)
 
+            self.generate_user_homepage(rt[0])
+            return redirect
+
         # resetposts.py
-        elif rt == 'resetposts.py':
-            # delete posts and replace with originals
-            shutil.rmtree('content/postmaps/')
-            shutil.rmtree('content/posts/')
-            os.mkdir('content/posts/')
-            shutil.copytree('content/defaultposts/', 'content/postmaps')
+        elif rt[1] == 'resetposts.py':
+            self.users.reset_user_posts(self.s, rt[0])
 
             # regenerate html pages
             self.post_maps_to_html(postmaps_dir="content/postmaps/")
+            return redirect
 
         # submitpost.py
-        elif rt == 'submitpost.py':
-            title = form.get("title", "Default title")
-            userid = form.get("userid", "anonymous")
-            content = form.get("content", "Whoops! this post seems to be empty!")
+        elif rt[1] == 'submitpost.py':
+            title = form.get("title", "Default title")[0]
+            userid = form.get("userid", "anonymous")[0]
+            content = form.get("content", "Whoops! this post seems to be empty!")[0]
+
+            user = self.users.get_user_by_id(userid)
+
+            # check if user doesn't exist
+            if user is None:
+                user = self.users.create_user(self.s, userid=userid)
+                self.users.users.append(user)
 
             # create and save new post
             np = Post(userid, title, content)
             np.to_post_map()
             np.to_html()
+            self.posts.add(np)
+            user.postlist.append(np.postid)
 
-            # regenerate html pages
-            self.post_maps_to_html(postmaps_dir="content/postmaps/")
+            # save user map
+            user.to_user_map(self.s["output_dir"] + self.s["users_dir"])
+
+            self.post_maps_to_html(self.s["users_dir"] + userid + "/postmaps/")
+            self.generate_user_homepages()
+            return "user/" + user.userid
 
         self.generate_home_page()
 
+    # TODO
+    """def get_post(self, postid: str, user: str):
+        for u in self.users:
+            if user == u.userid"""
+
     # generate html posts
-    def post_maps_to_html(self, postmaps_dir="content/postmaps/"):
+    def post_maps_to_html(self, postmaps_dir="users/home/postmaps/"):
         # fetch locations
+        #if not os.path.isdir(self.s['output_dir'] + self.s['content_dir'] + 'posts/' + ):
+        #    os.mkdir(self.s['output_dir'] + postmaps_dir)
+
         post_map_files = [fi for fi in os.listdir(postmaps_dir) if fi.endswith(".map")]
         if V:
             print("Found " + str(len(post_map_files)) + " post map files in " + postmaps_dir)
@@ -217,19 +380,75 @@ class Trido:
         for pmf in post_map_files:
             new_post = Post()
             new_post.from_post_map(postmaps_dir + pmf)
-            self.htmls[new_post.creationdate] = new_post.to_html(self.s['output_dir'] + self.s['content_dir'] + "posts/", )
-            self.posts.append(new_post)
+            new_post.to_html(self.s['output_dir'] + self.s['content_dir'] + "posts/" + new_post.userid + "/")
+            self.posts.add(new_post)
 
         # sort posts in chronological order
         #html_post_filenames = dict(sorted(html_post_filenames.items()))
-        self.posts.sort(key=lambda a: a.creationdate)
-        self.html_post_filenames = []
-        
-        for p in self.posts:
-            self.html_post_filenames.append(p.html_filename)
-        self.html_post_filenames.reverse()
-        #html_post_filenames = htmls.
-        #html_post_filenames = [value.html_filename for value in temp]
+        #self.posts.posts.sort(key=lambda a: a.creationdate)
+        #self.html_post_filenames = []
+
+        #for k, v in self.posts.posts.items():
+        #    self.html_post_filenames.append(v.html_filename)
+        #self.html_post_filenames.reverse()
+        self.home_filenames = [self.posts.get(i).html_filename for i in self.users.get_user_by_id("home").postlist]
+        self.home_filenames.reverse()
+
+    # regenerate main.css
+
+    # generates all user's homepages
+    def generate_user_homepages(self):
+        for u in self.users.users:
+            self.post_maps_to_html(self.s["users_dir"] + "/" + u.userid + "/postmaps/")
+            self.generate_user_homepage(u.userid)
+
+    # generate user home pages
+    def generate_user_homepage(self, user: str):
+        template = self.get_page("user.html")
+        html_buffer = ""
+        location = self.s['output_dir'] + self.s['content_dir'] + 'posts/' + user + "/"
+
+        user_posts = [fi for fi in os.listdir(location) if fi.endswith(".html")]
+        #for p in user.postlist:
+        #    post = self.posts.get(p)
+        for u in user_posts:
+            #with open(location + post.html_filename, 'r') as f:
+            with open(location + u, 'r') as f:
+                html_buffer += f.read() + "\n"
+
+        # fetch colors
+        with open(self.s["output_dir"] + self.s["users_dir"] + user + "/" + "colors.map", 'r') as data:
+            colors = json.load(data)
+
+        users_buffer = ""
+        for u in self.users.users:
+            users_buffer = users_buffer + "<a class=\"basic-link\" href=\"|SERVER|user/" + str(u.userid) + "\" >user/" + u.userid + "</a><br>"
+
+        template = template.replace("|OTHERUSERS|", users_buffer)
+
+        template = template.replace("|POSTS|", html_buffer)
+        template = template.replace("|SERVER|", self.s['server'])
+        template = template.replace("|USER|", str(user))
+        template = template.replace("|RANDOM|", str(datetime.datetime.now()))
+
+        # replace colors in css and home.html
+        with open("primitives/maintemplate.css", "r") as csstemplate:
+            with open(self.s["output_dir"] + self.s["content_dir"] + user + ".css", "w") as maincss:
+                css = csstemplate.read()
+                for k, v in colors.items():
+                    if V:
+                        print(str(k) + ", " + str(v))
+                    css = css.replace('\"' + k + '\"', v)
+                    template = template.replace(k, v)
+                maincss.write(css)
+                template = template.replace("|MAINCSS|", css, 1)
+
+        if not DRYRUN:
+            with open(self.s['output_dir'] + self.s['content_dir'] + user + ".html", 'w') as f:
+                f.write(template)
+
+        if V:
+            print("Wrote " + user + "'s homepage")
 
     # generates the home page
     def generate_home_page(self):
@@ -237,18 +456,18 @@ class Trido:
         # modify template
         """for m in range(1, 3):
             template = template.replace(macros[m].name, open("templates/" + macros[m].filename, 'r').read())"""
-        
+
         # TODO: generalise with macros
         html_buffer = ""
 
-        for h in self.html_post_filenames:
-            with open(self.s['output_dir'] + self.s['content_dir'] + "posts/" + h, 'r', encoding='utf-8') as f:
+        for h in self.home_filenames:
+            with open(self.s['output_dir'] + self.s['content_dir'] + "posts/home/" + h, 'r', encoding='utf-8') as f:
                 html_buffer = html_buffer + f.read() + "\n"
 
         # fetch colors
         with open("primitives/colors.map", 'r') as data:
             colors = json.load(data)
-        
+
         # replace colors in css and home.html
         with open("primitives/maintemplate.css", "r") as csstemplate:
             with open("main.css", "w") as maincss:
@@ -261,6 +480,7 @@ class Trido:
                 maincss.write(css)
                 # TODO: temp speedup css
                 template = template.replace("|MAINCSS|", css, 1)
+
         template = template.replace("|PROJECTS|", html_buffer)
         #template = template.replace("|SUBMIT|", open('submitpost.html').read())
         template = template.replace("|SUBMIT|", "")
@@ -275,10 +495,20 @@ class Trido:
             with open(self.s['output_dir'] + 'home.html', 'w', encoding='utf-8') as future_page:
                 future_page.write(template)
                 future_page.close()
-        
+
         # output html contents if the user wants
         if V:
             print("Populated home.html")
+
+    # find all users
+    def init_users(self):
+        self.users.users = []
+
+        _users = list(os.listdir(self.s["users_dir"]))
+        for u in _users:
+            new_user = self.users.create_user(self.s, userid=u)
+            new_user.from_user_map(self.s["users_dir"] + u + "/" + u + ".map")
+            self.users.users.append(new_user)
 
     # read the pages json into an object
     def read_site_map(self, filename):
@@ -287,11 +517,11 @@ class Trido:
             self.pages = json.load(f)
 
         # read in settings (there's got to be a better way of doing this)
-        fields = ['macros_file', 'publish_file', 'content_dir', 'template_dir', 'output_dir', 'postmaps_dir', 'server']
+        fields = ['macros_file', 'publish_file', 'content_dir', 'template_dir', 'output_dir', 'postmaps_dir', 'server', 'usermaps_dir', 'users_dir']
         for f in fields:
             if self.pages.get(f):
                 self.s[f] = self.pages.get(f)
-        
+
         # get what must be included
         if self.pages.get('include'):
             self.s['include'] = self.pages.get('include')
@@ -332,7 +562,7 @@ class Trido:
                 fu.header = "header.html"
             if fu.article == "":
                 fu.article = "article.html"
-        
+
         return future
 
     # read publish.map file
@@ -397,7 +627,7 @@ class Trido:
                     print("Copying contents of " + i + " to " + output + i)
                 # TODO: clean up how ugly this is
                 files = list(Path(i).rglob('*.*'))
-                
+
                 for f in files:
                     f_parent, f_name = os.path.split(Path(f))
                     # make new directory in output if it doesn't exist yet
@@ -426,7 +656,7 @@ class Trido:
                 shutil.copy2(i, output)
         # copy a backup of default post maps
         shutil.copytree(self.s['postmaps_dir'], self.s['output_dir'] + 'content/defaultposts/', dirs_exist_ok=True)
-        os.makedirs(self.s['output_dir'] + 'content/backup_posts', exist_ok=True)
+        os.makedirs(self.s['output_dir'] + 'content/posts/', exist_ok=True)
 
     # export compiled site to specified directory
     def export(self, future):
@@ -438,8 +668,14 @@ class Trido:
             os.mkdir(self.s['output_dir'] + self.s['content_dir'])
         if not os.path.exists(self.s['output_dir'] + self.s['content_dir'] + "/posts"):
             os.mkdir(self.s['output_dir'] + self.s['content_dir'] + "/posts")
-        
-        self.post_maps_to_html(self.s['postmaps_dir'])
+
+        self.init_users()
+
+        post_map_dirs = [self.s['users_dir'] + d + "/postmaps/" for d in os.listdir(self.s['users_dir'])]
+        for d in post_map_dirs:
+            self.post_maps_to_html(d)
+
+        self.generate_user_homepages()
         self.generate_home_page()
         self.export_include()
 
@@ -479,8 +715,8 @@ class Trido:
         return self.s['output_dir']
 
     # fetch the default template page
-    def get_page(self, template):
-        with open("primitives/home.html", 'r') as page_template:
+    def get_page(self, template="home.html"):
+        with open("primitives/" + template, 'r') as page_template:
             #return [l.rstrip() for l in page_template.readlines()]
             contents = page_template.read()
             page_template.close()
@@ -496,7 +732,7 @@ def get_primitive(template_dir="primitives/", primitive="post.html"):
         contents = primitive_template.read()
     return contents
 
-# check if user really wants to populate 
+# check if user really wants to populate
 def check_if_user_compile():
     print("""It is generally preferred to use the export functionality. 
 This will compile the project into the current directory. 
@@ -516,7 +752,7 @@ def main(args):
 
     if args.map:
         site_file = args.map
-    
+
     trido = Trido(site_map=site_file)
 
     if args.output:
@@ -544,7 +780,7 @@ def main(args):
             print("Run with: cd " + trido.s['output_dir'] + "; python3 -m http.server --cgi " + ''.join(filter(str.isdigit, trido.s['server'].split(':')[-1])))
     elif args.command == 'publish':
         trido.publish(trido.s)
-    
+
     t2 = time.process_time() - t
     if V:
         print("Took " + str(t2) + " seconds")
@@ -572,7 +808,7 @@ def generate_scp(pub_settings):
 # main entry
 # just parses and sends everything to main
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Project processor") 
+    parser = argparse.ArgumentParser(description="Project processor")
 
     # add keyword commands to commands parser
     commands = parser.add_subparsers(title='possible commands', dest='command', metavar='COMMAND')

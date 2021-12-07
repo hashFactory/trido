@@ -1,8 +1,8 @@
 
 /* whole page */
-* {
+/** {
     box-sizing: border-box;
-}
+}*/
 
 html, body {
     padding: 0;
@@ -45,11 +45,12 @@ header {
 
 /* project */
 .project {
-    border-bottom: 1px dashed darkgray;
+    border-bottom: 2px dashed "|BOXCOLOR|";
     margin-bottom: 10px;
     padding-bottom: 20px;
     margin-left: 10px;
     margin-right: 10px;
+    box-sizing: border-box;
 }
 #submit-area {
     bottom: 0;
@@ -57,11 +58,8 @@ header {
     width: 100%;
 }
 .project details {
+    font-size: 100%;
     margin-bottom: 10px;
-}
-.project form {
-    padding-left: 20px;
-    padding-right: 20px;
 }
 .project textarea {
     max-width: 100%;
@@ -71,12 +69,15 @@ header {
 .project br {
     padding: 10px;
 }
+.project ul {
+    padding-left: 10px;
+    padding-right: 10px;
+}
 .button {
     text-align: center;
     width: 100%;
     height: auto;
     font-size: 100%;
-    padding: 1px;
     border-style: solid "|TEXTCOLOR|";
     font-weight: bold;
     color: "|TEXTCOLOR|";
@@ -89,7 +90,7 @@ header {
     border: 2px solid "|TEXTCOLOR|";
     font-weight: bold;
     color: "|TEXTCOLOR|";
-    background-color: "|BGCOLOR|";
+    background-color: "|BOXCOLOR|";
 }
 .colorfield {
     width: 150px;
@@ -167,7 +168,6 @@ header {
 .border {
     color: "|TEXTCOLOR|";
     border: 1px solid "|TEXTCOLOR|";
-    border-style: 1px solid;
     background-color: "|BOXCOLOR|";
 }
 
