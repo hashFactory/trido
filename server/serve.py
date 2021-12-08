@@ -11,7 +11,7 @@ class ProjectRequestHandler(CGIHTTPRequestHandler):
     # responds by replying with file content
     def respond_with(self, out, filename, contenttype=""):
         self.send_response(200)
-        if contenttype is not "":
+        if contenttype != "":
             self.send_header("Content-type", contenttype)
         self.end_headers()
         with open(filename, 'rb') as h:
@@ -30,9 +30,6 @@ class ProjectRequestHandler(CGIHTTPRequestHandler):
             self.respond_with(out, 'content/home.html', 'text/html')
         #if request.pa
         elif "/user/" in self.path:
-            #split = request.path.split("/")
-            #if ".css" in self.path:
-            #    self.respond_with(out, 'content/' )
             self.respond_with(out, 'content/' + request.path.split("/")[-1] + '.html')
         else:
             SimpleHTTPRequestHandler.do_GET(self)

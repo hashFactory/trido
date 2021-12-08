@@ -142,6 +142,7 @@ class User:
         self.user_map_filename: str = ""
         self.homepage: str = ""
         self.colors = {}
+        self.backgroundimage = ""
 
     # populate info from .map file
     def from_user_map(self, filename):
@@ -157,6 +158,7 @@ class User:
         self.creationdate = user_map.get("creationdate")
         self.postlist = user_map.get("postlist")
         self.homepage = self.userid + ".html"
+        self.backgroundimage = user_map.get("backgroundimage")
 
         return self
 
@@ -187,7 +189,8 @@ class User:
             'userid': self.userid,
             'username': self.username,
             'creationdate': self.creationdate,
-            'postlist': self.postlist
+            'postlist': self.postlist,
+            'backgroundimage': self.backgroundimage
         }
 
 class Posts:
@@ -248,7 +251,7 @@ class Users:
         return False
 
     # fetch user by id
-    def get_user_by_id(self, userid=""):
+    def get_user_by_id(self, userid="") -> User :
         for u in self.users:
             if u.userid == userid:
                 return u
@@ -333,9 +336,9 @@ class Trido:
 
         # submitpost.py
         elif rt[1] == 'submitpost.py':
-            title = form.get("title", "Default title")[0]
-            userid = form.get("userid", "anonymous")[0]
-            content = form.get("content", "Whoops! this post seems to be empty!")[0]
+            title = form.get("title", ["Default title"])[0]
+            userid = form.get("userid", ["anonymous"])[0]
+            content = form.get("content", ["Whoops! this post seems to be empty!"])[0]
 
             user = self.users.get_user_by_id(userid)
 
@@ -360,10 +363,18 @@ class Trido:
 
         self.generate_home_page()
 
-    # TODO
-    """def get_post(self, postid: str, user: str):
-        for u in self.users:
-            if user == u.userid"""
+    # TODO: split trido into api and ssg
+    # TODO: fix account creation
+    # TODO: fix background image flex nonsense
+    # TODO: decide on source of truth .map or postmaps folder
+    # TODO: edit post portal
+    # TODO: make post links clickable
+    # TODO: file upload action
+    # TODO: fix reset posts
+    # TODO: fix compile arg
+    # TODO: look into macro replacement engine
+    # TODO: user export and backup
+    # TODO: add prefix for links
 
     # generate html posts
     def post_maps_to_html(self, postmaps_dir="users/home/postmaps/"):
@@ -371,10 +382,12 @@ class Trido:
         #if not os.path.isdir(self.s['output_dir'] + self.s['content_dir'] + 'posts/' + ):
         #    os.mkdir(self.s['output_dir'] + postmaps_dir)
 
+        # sort posts in chronological order
         post_map_files = [fi for fi in os.listdir(postmaps_dir) if fi.endswith(".map")]
+        post_map_files.sort()
         if V:
             print("Found " + str(len(post_map_files)) + " post map files in " + postmaps_dir)
-        primitive_post = open(self.s['template_dir'] + 'post.html')
+        #primitive_post = open(self.s['template_dir'] + 'post.html')
 
         # generate individual htmls
         for pmf in post_map_files:
@@ -382,17 +395,6 @@ class Trido:
             new_post.from_post_map(postmaps_dir + pmf)
             new_post.to_html(self.s['output_dir'] + self.s['content_dir'] + "posts/" + new_post.userid + "/")
             self.posts.add(new_post)
-
-        # sort posts in chronological order
-        #html_post_filenames = dict(sorted(html_post_filenames.items()))
-        #self.posts.posts.sort(key=lambda a: a.creationdate)
-        #self.html_post_filenames = []
-
-        #for k, v in self.posts.posts.items():
-        #    self.html_post_filenames.append(v.html_filename)
-        #self.html_post_filenames.reverse()
-        self.home_filenames = [self.posts.get(i).html_filename for i in self.users.get_user_by_id("home").postlist]
-        self.home_filenames.reverse()
 
     # regenerate main.css
 
@@ -409,6 +411,9 @@ class Trido:
         location = self.s['output_dir'] + self.s['content_dir'] + 'posts/' + user + "/"
 
         user_posts = [fi for fi in os.listdir(location) if fi.endswith(".html")]
+        user_posts.sort()
+        user_posts.reverse()
+        #user_posts =
         #for p in user.postlist:
         #    post = self.posts.get(p)
         for u in user_posts:
@@ -422,7 +427,7 @@ class Trido:
 
         users_buffer = ""
         for u in self.users.users:
-            users_buffer = users_buffer + "<a class=\"basic-link\" href=\"|SERVER|user/" + str(u.userid) + "\" >user/" + u.userid + "</a><br>"
+            users_buffer = "<a class=\"basic-link\" href=\"|SERVER|user/" + str(u.userid) + "\" >user/" + u.userid + "</a><br>" + users_buffer
 
         template = template.replace("|OTHERUSERS|", users_buffer)
 
@@ -440,6 +445,12 @@ class Trido:
                         print(str(k) + ", " + str(v))
                     css = css.replace('\"' + k + '\"', v)
                     template = template.replace(k, v)
+
+                bgurl = ""
+                bgimage = self.users.get_user_by_id(user).backgroundimage
+                if bgimage != "":
+                    bgurl = "background-image: url('" + bgimage + "');\n"
+                css = css.replace("\"|BGURL|\"", bgurl)
                 maincss.write(css)
                 template = template.replace("|MAINCSS|", css, 1)
 
@@ -460,6 +471,7 @@ class Trido:
         # TODO: generalise with macros
         html_buffer = ""
 
+        self.home_filenames = [self.posts.get(i).html_filename for i in self.users.get_user_by_id("home").postlist]
         for h in self.home_filenames:
             with open(self.s['output_dir'] + self.s['content_dir'] + "posts/home/" + h, 'r', encoding='utf-8') as f:
                 html_buffer = html_buffer + f.read() + "\n"
@@ -470,7 +482,7 @@ class Trido:
 
         # replace colors in css and home.html
         with open("primitives/maintemplate.css", "r") as csstemplate:
-            with open("main.css", "w") as maincss:
+            with open("primitives/main.css", "w") as maincss:
                 css = csstemplate.read()
                 for k, v in colors.items():
                     if V:
@@ -676,7 +688,7 @@ class Trido:
             self.post_maps_to_html(d)
 
         self.generate_user_homepages()
-        self.generate_home_page()
+        #self.generate_home_page()
         self.export_include()
 
     # uses export to publish website using publish_file directive
