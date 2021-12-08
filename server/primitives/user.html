@@ -12,9 +12,13 @@
 
 <!-- Components -->
 
-<body>
+<body id="fade-in">
+<div id="page">
+    <div id="page-title">
+        <h2 class="title">Welcome to |USER|'s homepage!</h2>
+    </div>
 
-<h2 class="title">Welcome to |USER|'s homepage!</h2>
+    <div id="project-list">
 
 <!-- Beginning of post -->
 <div class="project">
@@ -26,30 +30,32 @@
         |OTHERUSERS|
     </div>
 </div>
+
+|POSTS|
+
 <div class="project">
     <p>You can now create posts! Fill out the form with either an existing user or a new pseudonym and the corresponding page will be created!</p>
     <div class="project-body">
-    <details class="border">
-        <summary>
-            Expand to write a post
-        </summary>
-        <ul>
-            <form action="|SERVER|api/|USER|/resetposts.py" method="POST">
-                <button class="button">Reset posts</button>
-            </form>
-            <form action="|SERVER|api/|USER|/submitpost.py" method="POST">
-                <label for="title">Title: </label>
-                <input id="title" name="title" type="text" class="field" /><br>
-                <label for="userid">Name: </label>
-                <input id="userid" name="userid" type="text" class="field" value="|USER|"/><br>
-                <label for="content">Contents: </label>
-                <textarea id="content" name="content" type="text" class="border"></textarea><br><br>
-                <!-- <input type="submit" class="button" onclick="setTimeout(window.location.reload(true), 400);" value="Submit post" target="uselessFrame"/> -->
-                <button class="button">Submit</button>
-            </form>
-        </ul>
-    </details>
-        <div>
+        <details class="border">
+            <summary>
+                Expand to write a post
+            </summary>
+            <ul>
+                <form action="|SERVER|api/|USER|/resetposts.py" method="POST">
+                    <button class="button">Reset posts</button>
+                </form>
+                <form action="|SERVER|api/|USER|/submitpost.py" method="POST">
+                    <label for="title">Title: </label>
+                    <input id="title" name="title" type="text" class="field" /><br>
+                    <label for="userid">Name: </label>
+                    <input id="userid" name="userid" type="text" class="field" value="|USER|"/><br>
+                    <label for="content">Contents: </label>
+                    <textarea id="content" name="content" type="text"></textarea><br><br>
+                    <button class="button">Submit</button>
+                </form>
+            </ul>
+        </details>
+        <div class="project-body">
             <form method="POST">
                 <button style="width: 49% !important;" formaction="|SERVER|api/|USER|/resetcolors.py" class="button">Reset colors</button>
                 <button style="width: 49% !important;" formaction="|SERVER|api/|USER|/randomcolors.py" class="button">Random colors</button>
@@ -59,7 +65,7 @@
             <summary>
                 Expand to set your personal page colors
             </summary>
-            <ul style="padding-left: 0px">
+            <ul>
                 <form action="|SERVER|api/|USER|/colors.py" method="POST">
                     <label for="bgcolor">Background color: </label>
                     <input id="bgcolor" name="bgcolor" type="color" class="colorfield" value="|BGCOLOR|"/><br>
@@ -75,8 +81,6 @@
         </details>
     </div>
 </div>
-
-
-|POSTS|
-
+</div>
+</div>
 </body>

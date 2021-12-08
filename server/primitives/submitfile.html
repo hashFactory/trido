@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="main.css?|RANDOM|" rel="stylesheet" type="text/css" />
+    <link href="submitfile.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="project">
+
+    <div class="project-body">
+        <div>
+
+            <form action="|SERVER|api/|USER|/submitfile.py" method="POST">
+                <label for="url">url: </label>
+                <input id="url" name="title" type="text" class="field" /><br>
+                <label for="userid">Name: </label>
+                <input id="userid" name="userid" type="file" class="field" value="|USER|"/><br>
+                <!-- <input type="submit" class="button" onclick="setTimeout(window.location.reload(true), 400);" value="Submit post" target="uselessFrame"/> -->
+                <button class="button">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
