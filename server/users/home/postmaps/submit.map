@@ -1,0 +1,13 @@
+{
+    "userid": "home",
+    "postid": "submit",
+    "title": "Create a profile!",
+    "content": 
+    "    <!-- Post contents -->\n    <p>You can now create personal user accounts! Fill the form below with a single word pseudonym to create your account</p>\n   <details class=\"border\">\n        <summary>\n            Expand to create a profile\n        </summary>\n        <ul>\n           <form action=\"|SERVER|api/home/submitpost.py\" method=\"POST\">\n          <label for=\"userid\">Name: </label>\n                <input id=\"userid\" name=\"userid\" type=\"text\" class=\"field\" /><br>\n           <!-- <input type=\"submit\" class=\"button\" onclick=\"setTimeout(window.location.reload(true), 400);\" value=\"Submit post\" target=\"uselessFrame\"/> -->\n                <button class=\"button\">Submit</button>\n            </form>\n            <iframe name=\"uselessFrame\" width=\"0px\" height=\"0px\" hidden=\"true\"></iframe>\n        </ul>\n    </details>"
+    ,"creationdate": 1638488125.988932,
+    "modifieddate": 1638488125.988932,
+    "collection": "",
+    "tags": [],
+    "files": [],
+    "links": []
+}

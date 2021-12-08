@@ -3,7 +3,8 @@
   "username": "Tristan",
   "creationdate": "0.0",
   "postlist": [
-    "bandcampfavs", "post1", "gallerypost", "randomfiles"
+    "09bandcampfavs", "08post1", "07randomfiles", "06gallerypost"
   ],
+  "backgroundimage": "http://127.0.0.1:10952/assets/ball_loop3.png",
   "version": 3
 }

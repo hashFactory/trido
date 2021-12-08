@@ -1,0 +1,13 @@
+{
+  "userid": "tristan",
+  "postid": "08post1",
+  "title": "Tristan's first post",
+  "content": "<details class=\"border\"><summary>My picture</summary><ul class=\"gallery\"><li style=\"flex-basis: 100%;\"></li><li style=\"flex-basis: 100%;\"><img src=\"http://leda.usbx.me:10958/trucs/v1.jpg\" title=\"v1.jpg\"></li></ul></details>",
+  "creationdate": 1638462366.129919,
+  "modifieddate": 1638462366.129919,
+  "collection": "",
+  "tags": [],
+  "files": [],
+  "links": [],
+  "version": 3
+}
