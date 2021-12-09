@@ -66,7 +66,7 @@ if __name__ == '__main__':
             trido.post_maps_to_html(d)
 
         trido.generate_user_homepages()
-        trido.generate_home_page()
+        #trido.generate_home_page()
 
         # inform user
         print("Serving on " + trido.s["server"])

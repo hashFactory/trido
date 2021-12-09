@@ -66,12 +66,12 @@ class Post:
             # TODO: properly convert markdown to html
             # TODO: convert links
             # read in fields
-            self.userid = post_map.get("userid")
-            self.postid = post_map.get("postid")
-            self.title = post_map.get("title")
+            self.userid = str(post_map.get("userid"))
+            self.postid = str(post_map.get("postid"))
+            self.title = str(post_map.get("title"))
             self.content = post_map.get("content")
-            self.creationdate = post_map.get("creationdate")
-            self.modifieddate = post_map.get("modifieddate")
+            self.creationdate = str(post_map.get("creationdate"))
+            self.modifieddate = str(post_map.get("modifieddate"))
 
             # if verbose
             if V:
@@ -156,7 +156,7 @@ class User:
         self.userid = user_map.get("userid")
         self.username = user_map.get("username")
         self.creationdate = user_map.get("creationdate")
-        self.postlist = user_map.get("postlist")
+        self.postlist = [str(u) for u in user_map.get("postlist")]
         self.homepage = self.userid + ".html"
         self.backgroundimage = user_map.get("backgroundimage")
 
@@ -225,8 +225,8 @@ class Users:
         os.makedirs(s["output_dir"] + s["users_dir"] + userid + "/postmaps/", exist_ok=True)
         os.makedirs(s["output_dir"] + s["users_dir"] + userid + "/backup_posts/", exist_ok=True)
 
-        shutil.copy2(s["template_dir"] + "colors.map", s["output_dir"] + s["users_dir"] + userid + "/colors.map")
-        shutil.copy2(s["template_dir"] + "colors.map", s["output_dir"] + s["users_dir"] + userid + "/colors.map")
+        if not os.path.exists(s["output_dir"] + s["users_dir"] + userid + "/colors.map"):
+            shutil.copy2(s["template_dir"] + "colors.map", s["output_dir"] + s["users_dir"] + userid + "/colors.map")
 
         user = User(userid=userid, username=userid)
         if V:
@@ -287,7 +287,7 @@ class Trido:
                 return split[2], split[3]
 
     # handles cgi post requests
-    def handle_post_request(self, rt: (str, str), form: dict):
+    def handle_post_request(self, rt: (str, str), form: dict) -> str:
         redirect = "user/" + rt[0]
         if rt[0] == 'home':
             redirect = ""
@@ -326,6 +326,19 @@ class Trido:
             self.generate_user_homepage(rt[0])
             return redirect
 
+        # setbackground.py
+        elif rt[1] == 'setbackground.py':
+            bgurl: str = form.get("bgurl")[0]
+            user = self.users.get_user_by_id(rt[0])
+
+            if len(bgurl) > 0 and bgurl.startswith("http"):
+                if user:
+                    user.backgroundimage = bgurl
+                    user.to_user_map(self.s["output_dir"] + self.s["users_dir"])
+                    self.generate_user_homepage(user.userid)
+
+            return redirect
+
         # resetposts.py
         elif rt[1] == 'resetposts.py':
             self.users.reset_user_posts(self.s, rt[0])
@@ -333,6 +346,21 @@ class Trido:
             # regenerate html pages
             self.post_maps_to_html(postmaps_dir="content/postmaps/")
             return redirect
+
+        # createprofile.py
+        elif rt[1] == 'createprofile.py':
+            userid = form.get("userid", ["anonymous"])[0]
+
+            user = self.users.get_user_by_id(userid)
+
+            if user is None:
+                user = self.users.create_user(self.s, userid=userid)
+                self.users.users.append(user)
+                user.to_user_map(self.s["output_dir"] + self.s["users_dir"])
+                self.generate_user_homepages()
+                return "user/" + userid
+            else:
+                return "/"
 
         # submitpost.py
         elif rt[1] == 'submitpost.py':
@@ -375,13 +403,10 @@ class Trido:
     # TODO: look into macro replacement engine
     # TODO: user export and backup
     # TODO: add prefix for links
+    # TODO: support different deployment configurations
 
     # generate html posts
     def post_maps_to_html(self, postmaps_dir="users/home/postmaps/"):
-        # fetch locations
-        #if not os.path.isdir(self.s['output_dir'] + self.s['content_dir'] + 'posts/' + ):
-        #    os.mkdir(self.s['output_dir'] + postmaps_dir)
-
         # sort posts in chronological order
         post_map_files = [fi for fi in os.listdir(postmaps_dir) if fi.endswith(".map")]
         post_map_files.sort()
@@ -413,9 +438,7 @@ class Trido:
         user_posts = [fi for fi in os.listdir(location) if fi.endswith(".html")]
         user_posts.sort()
         user_posts.reverse()
-        #user_posts =
-        #for p in user.postlist:
-        #    post = self.posts.get(p)
+
         for u in user_posts:
             #with open(location + post.html_filename, 'r') as f:
             with open(location + u, 'r') as f:
@@ -435,6 +458,7 @@ class Trido:
         template = template.replace("|SERVER|", self.s['server'])
         template = template.replace("|USER|", str(user))
         template = template.replace("|RANDOM|", str(datetime.datetime.now()))
+        template = template.replace("|BGURL|", self.users.get_user_by_id(user).backgroundimage)
 
         # replace colors in css and home.html
         with open("primitives/maintemplate.css", "r") as csstemplate:
@@ -498,9 +522,6 @@ class Trido:
         template = template.replace("|SUBMIT|", "")
         template = template.replace("|SERVER|", self.s['server'])
         template = template.replace("|RANDOM|", str(datetime.datetime.now()))
-
-        with open(self.s['output_dir'] + 'projects.html', 'w', encoding='utf-8') as p:
-            p.write(html_buffer)
 
         # write to output file
         if not DRYRUN:
@@ -674,12 +695,7 @@ class Trido:
     def export(self, future):
         self.macros = self.read_macros_map(self.s['macros_file'])
 
-        if not os.path.exists(self.s['output_dir']):
-            os.mkdir(self.s['output_dir'])
-        if not os.path.exists(self.s['output_dir'] + self.s['content_dir']):
-            os.mkdir(self.s['output_dir'] + self.s['content_dir'])
-        if not os.path.exists(self.s['output_dir'] + self.s['content_dir'] + "/posts"):
-            os.mkdir(self.s['output_dir'] + self.s['content_dir'] + "/posts")
+        os.makedirs(self.s['output_dir'] + self.s['content_dir'] + "/posts", exist_ok=True)
 
         self.init_users()
 
@@ -722,8 +738,6 @@ class Trido:
 
     # return output dir as string
     def _outdir(self):
-        #if len(settings.keys()) == 0:
-        #    read_macros_map('site.map')
         return self.s['output_dir']
 
     # fetch the default template page

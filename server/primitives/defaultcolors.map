@@ -2,5 +2,5 @@
     "|BGCOLOR|": "#000000",
     "|TITLECOLOR|": "#f6f2f7",
     "|TEXTCOLOR|": "#f6f2f7",
-    "|BOXCOLOR|": "#2f1f33"
+    "|BOXCOLOR|": "rgba(0.2, 0.2, 0.2, 0.6)"
 }

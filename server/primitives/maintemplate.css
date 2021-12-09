@@ -1,38 +1,37 @@
 
 /* whole page */
-/** {
-    box-sizing: border-box;
-}*/
-html {
+* {
+    box-sizing: inherit;
 }
-html, body {
+body, html {
     padding: 0;
     margin: 0;
-    font-family: arial;
+    font-family: sans-serif;
     width: 100%;
+    height: 100%;
     background-color: "|BGCOLOR|";
-}
-body {
 }
 #page {
     display: flex;
     height: 100%;
     flex-direction: column;
-    background-color: rgba(128, 128, 128, 0.2);
+    /* background-color: rgba(128, 128, 128, 0.2); */
 }
+
 .title {
-    font-family: "Arial";
+    font-family: sans-serif;
     color: "black";
     text-decoration: none;
     text-align: center;
 }
-
+a::after {
+    content: "→";
+}
 .basic-link {
-    font-family: "Arial";
+    font-family: sans-serif;
     color: black;
     text-decoration: underline;
 }
-
 /* header */
 header {
     text-align: center;
@@ -43,7 +42,7 @@ header {
 /* all content pages */
 .content-title {
     text-align: center;
-    font-family: "Arial";
+    font-family: sans-serif;
 }
 
 /* project */
@@ -59,12 +58,21 @@ header {
     flex: 1 1 auto;
     display: flex;
     overflow-y: scroll;
+    overflow-x: hidden;
     flex-direction: column;
+    width: 100%;
+}
+#project-list::-webkit-scrollbar {
+    display: none;
+}
+details:focus {
+    -webkit-appearance: none;
+    outline: none !important;
 }
 #submit-area {
+    flex: none;
     bottom: 0;
-    position: fixed;
-    width: 100%;
+    margin: 0 auto;
 }
 .project details {
     font-size: 100%;
@@ -85,7 +93,7 @@ header {
 }
 .button {
     text-align: center;
-    width: 100%;
+    width: auto;
     height: auto;
     font-size: 100%;
     border-style: 1px solid "|TEXTCOLOR|";
@@ -108,6 +116,7 @@ header {
 }
 .colorfield {
     width: 150px;
+    height: 0.4cm;
     border: 1px solid "|TEXTCOLOR|";
     background-color: "|BGCOLOR|";
 }
@@ -153,7 +162,7 @@ header {
     flex-wrap: wrap;
     list-style: none;
     margin-top: 10px;
-    padding: 0px;
+    padding: 0px !important;
 }
 
 .gallery li {
@@ -192,7 +201,7 @@ header {
     justify-content: left;
     align-items: left;
     overflow: hidden;
-    font-family: "Arial";
+    font-family: sans-serif;
     padding-top: 5px;
     padding-bottom: 5px;
     border-bottom: 1px dashed darkgray;
@@ -243,7 +252,7 @@ header {
 /* playlist page */
 .playlist-page-header {
     text-align: center;
-    font-family: "Arial";
+    font-family: sans-serif;
 }
 
 .playlist-page-header h2 {
@@ -293,14 +302,14 @@ nav ul li {
 }
 
 nav ul li a {
-    font-family: "Arial";
+    font-family: sans-serif;
     color: #330033;
     text-decoration: none;
     padding-left: 5px;
 }
 
 nav ul li a p {
-    font-family: "Arial";
+    font-family: sans-serif;
     color: #330033;
     text-decoration: none;
     text-align: center;
@@ -330,10 +339,15 @@ section {
     overflow: auto;
 }
 
+@media print {
+    #page {
+        height: auto;
+    }
+}
+
 /* make it reactive */
 @media only screen and (max-width: 860px) {
     .gallery li {
-        height:min-content;
         flex-basis: 100%;
     }
     .gallery li img {

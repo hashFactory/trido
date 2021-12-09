@@ -1,4 +1,5 @@
 <!doctype html>
+<html>
 <head>
     <title>
         |USER|'s homepage
@@ -12,7 +13,7 @@
 
 <!-- Components -->
 
-<body id="fade-in">
+<body>
 <div id="page">
     <div id="page-title">
         <h2 class="title">Welcome to |USER|'s homepage!</h2>
@@ -26,61 +27,84 @@
         <h3 class="basic-link">Current profiles</h3>
     </div>
     <div class="project-body">
-        <p class="project-body">Tap on any link to go to their personal page</p>
-        |OTHERUSERS|
+        <details class="border">
+            <summary>
+                Tap on any link to go to their personal page
+            </summary>
+            <ul>
+            |OTHERUSERS|
+            </ul>
+        </details>
     </div>
 </div>
 
 |POSTS|
 
-<div class="project">
-    <p>You can now create posts! Fill out the form with either an existing user or a new pseudonym and the corresponding page will be created!</p>
-    <div class="project-body">
-        <details class="border">
-            <summary>
-                Expand to write a post
-            </summary>
-            <ul>
-                <form action="|SERVER|api/|USER|/resetposts.py" method="POST">
-                    <button class="button">Reset posts</button>
-                </form>
-                <form action="|SERVER|api/|USER|/submitpost.py" method="POST">
-                    <label for="title">Title: </label>
-                    <input id="title" name="title" type="text" class="field" /><br>
-                    <label for="userid">Name: </label>
-                    <input id="userid" name="userid" type="text" class="field" value="|USER|"/><br>
-                    <label for="content">Contents: </label>
-                    <textarea id="content" name="content" type="text"></textarea><br><br>
-                    <button class="button">Submit</button>
-                </form>
-            </ul>
-        </details>
+</div>
+
+    <details id="submit-area" class="border">
+        <summary>Edit page settings</summary>
+    <div class="project last-li">
+        <p>You can now create posts! Fill out the form with either an existing user or a new pseudonym and the corresponding page will be created!</p>
         <div class="project-body">
-            <form method="POST">
-                <button style="width: 49% !important;" formaction="|SERVER|api/|USER|/resetcolors.py" class="button">Reset colors</button>
-                <button style="width: 49% !important;" formaction="|SERVER|api/|USER|/randomcolors.py" class="button">Random colors</button>
-            </form>
-        </div>
-        <details class="border">
-            <summary>
-                Expand to set your personal page colors
-            </summary>
-            <ul>
-                <form action="|SERVER|api/|USER|/colors.py" method="POST">
-                    <label for="bgcolor">Background color: </label>
-                    <input id="bgcolor" name="bgcolor" type="color" class="colorfield" value="|BGCOLOR|"/><br>
-                    <label for="titlecolor">Title color: </label>
-                    <input id="titlecolor" name="titlecolor" type="color" class="colorfield" value="|TITLECOLOR|"/><br>
-                    <label for="textcolor">Text color: </label>
-                    <input id="textcolor" name="textcolor" type="color" class="colorfield" value="|TEXTCOLOR|"/><br>
-                    <label for="boxcolor">Box color: </label>
-                    <input id="boxcolor" name="boxcolor" type="color" class="colorfield" value="|BOXCOLOR|"/><br><br>
-                    <button class="button">Submit</button>
+            <details class="border">
+                <summary>
+                    Expand to write a post
+                </summary>
+                <ul>
+                    <form action="|SERVER|api/|USER|/resetposts.py" method="POST">
+                        <button class="button">Reset posts</button>
+                    </form>
+                    <form action="|SERVER|api/|USER|/submitpost.py" method="POST">
+                        <label for="title">Title: </label>
+                        <input id="title" name="title" type="text" class="field" /><br>
+                        <label for="userid">Name: </label>
+                        <input id="userid" name="userid" type="text" class="field" value="|USER|"/><br>
+                        <label for="content">Contents: </label>
+                        <textarea id="content" name="content" type="text"></textarea><br><br>
+                        <button class="button">Submit</button>
+                    </form>
+                </ul>
+            </details>
+            <details class="border">
+                <summary>
+                    Expand to set background image
+                </summary>
+                <ul>
+                    <form action="|SERVER|api/|USER|/setbackground.py" method="POST">
+                        <label for="bgurl">Image url: </label>
+                        <input id="bgurl" name="bgurl" type="text" class="field" value="|BGURL|"/><br>
+                        <button class="button">Submit</button>
+                    </form>
+                </ul>
+            </details>
+            <div class="project-body">
+                <form method="POST">
+                    <button style="width: 49% !important;" formaction="|SERVER|api/|USER|/resetcolors.py" class="button">Reset colors</button>
+                    <button style="width: 49% !important;" formaction="|SERVER|api/|USER|/randomcolors.py" class="button">Random colors</button>
                 </form>
-            </ul>
-        </details>
+            </div>
+            <details class="border">
+                <summary>
+                    Expand to set your personal page colors
+                </summary>
+                <ul>
+                    <form action="|SERVER|api/|USER|/colors.py" method="POST">
+                        <label for="bgcolor">Background color: </label>
+                        <input id="bgcolor" name="bgcolor" type="color" class="colorfield" value="|BGCOLOR|"/><br>
+                        <label for="titlecolor">Title color: </label>
+                        <input id="titlecolor" name="titlecolor" type="color" class="colorfield" value="|TITLECOLOR|"/><br>
+                        <label for="textcolor">Text color: </label>
+                        <input id="textcolor" name="textcolor" type="color" class="colorfield" value="|TEXTCOLOR|"/><br>
+                        <label for="boxcolor">Box color: </label>
+                        <input id="boxcolor" name="boxcolor" type="color" class="colorfield" value="|BOXCOLOR|"/><br>
+                        <button class="button">Submit</button>
+                    </form>
+                </ul>
+            </details>
+        </div>
     </div>
-</div>
-</div>
+    </details>
 </div>
 </body>
+</html>
