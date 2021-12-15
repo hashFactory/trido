@@ -224,6 +224,7 @@ class Users:
         os.makedirs(s["output_dir"] + s["users_dir"] + userid, exist_ok=True)
         os.makedirs(s["output_dir"] + s["users_dir"] + userid + "/postmaps/", exist_ok=True)
         os.makedirs(s["output_dir"] + s["users_dir"] + userid + "/backup_posts/", exist_ok=True)
+        os.makedirs(s["output_dir"] + "assets/" + userid + "/", exist_ok=True)
 
         if not os.path.exists(s["output_dir"] + s["users_dir"] + userid + "/colors.map"):
             shutil.copy2(s["template_dir"] + "colors.map", s["output_dir"] + s["users_dir"] + userid + "/colors.map")
@@ -326,12 +327,20 @@ class Trido:
             self.generate_user_homepage(rt[0])
             return redirect
 
+        elif rt[1] == 'uploadfile.py':
+            return redirect
+
         # setbackground.py
-        elif rt[1] == 'setbackground.py':
+        elif rt[1] == 'setbackground.py' or rt[1] == 'uploadbackground.py':
             bgurl: str = form.get("bgurl")[0]
             user = self.users.get_user_by_id(rt[0])
+            if not bgurl.startswith("http"):
+                #bgurl = user.userid + "/" +
+                pass
+                #bgurl = bgurl.replace("|USER|", str(user.userid))
+                # TODO: fix bgurl prefix discrepency
 
-            if len(bgurl) > 0 and bgurl.startswith("http"):
+            if len(bgurl) > 0:
                 if user:
                     user.backgroundimage = bgurl
                     user.to_user_map(self.s["output_dir"] + self.s["users_dir"])
@@ -392,8 +401,6 @@ class Trido:
         self.generate_home_page()
 
     # TODO: split trido into api and ssg
-    # TODO: fix account creation
-    # TODO: fix background image flex nonsense
     # TODO: decide on source of truth .map or postmaps folder
     # TODO: edit post portal
     # TODO: make post links clickable
@@ -404,6 +411,9 @@ class Trido:
     # TODO: user export and backup
     # TODO: add prefix for links
     # TODO: support different deployment configurations
+    # TODO: page to manage user's files
+    # TODO: fix filename on save
+    # TODO: POST reply multi part data with filename
 
     # generate html posts
     def post_maps_to_html(self, postmaps_dir="users/home/postmaps/"):
@@ -450,15 +460,24 @@ class Trido:
 
         users_buffer = ""
         for u in self.users.users:
-            users_buffer = "<a class=\"basic-link\" href=\"|SERVER|user/" + str(u.userid) + "\" >user/" + u.userid + "</a><br>" + users_buffer
+            users_buffer = "<li><a class=\"basic-link\" href=\"|SERVER|user/" + str(u.userid) + "\" >user/" + u.userid + "</a></li>" + users_buffer
 
         template = template.replace("|OTHERUSERS|", users_buffer)
 
+        template = template.replace("|BGURL|", self.users.get_user_by_id(user).backgroundimage)
+        bgurl = ""
+        bgimage = self.users.get_user_by_id(user).backgroundimage
+        if not bgimage.startswith("http"):
+            bgimage = self.s["server"] + "assets/" + bgimage
+        if bgimage != "":
+            bgurl = "background-image: url('" + bgimage + "');\n"
+
+
         template = template.replace("|POSTS|", html_buffer)
+        template = template.replace("|ASSETS|", self.s['assets_location'])
         template = template.replace("|SERVER|", self.s['server'])
         template = template.replace("|USER|", str(user))
         template = template.replace("|RANDOM|", str(datetime.datetime.now()))
-        template = template.replace("|BGURL|", self.users.get_user_by_id(user).backgroundimage)
 
         # replace colors in css and home.html
         with open("primitives/maintemplate.css", "r") as csstemplate:
@@ -470,10 +489,6 @@ class Trido:
                     css = css.replace('\"' + k + '\"', v)
                     template = template.replace(k, v)
 
-                bgurl = ""
-                bgimage = self.users.get_user_by_id(user).backgroundimage
-                if bgimage != "":
-                    bgurl = "background-image: url('" + bgimage + "');\n"
                 css = css.replace("\"|BGURL|\"", bgurl)
                 maincss.write(css)
                 template = template.replace("|MAINCSS|", css, 1)
@@ -520,6 +535,7 @@ class Trido:
         template = template.replace("|PROJECTS|", html_buffer)
         #template = template.replace("|SUBMIT|", open('submitpost.html').read())
         template = template.replace("|SUBMIT|", "")
+        template = template.replace("|ASSETS|", self.s['assets_location'])
         template = template.replace("|SERVER|", self.s['server'])
         template = template.replace("|RANDOM|", str(datetime.datetime.now()))
 
@@ -537,11 +553,13 @@ class Trido:
     def init_users(self):
         self.users.users = []
 
-        _users = list(os.listdir(self.s["users_dir"]))
+        # grab all non hidden directories
+        _users = [u for u in (list(os.listdir(self.s["users_dir"])))]
         for u in _users:
-            new_user = self.users.create_user(self.s, userid=u)
-            new_user.from_user_map(self.s["users_dir"] + u + "/" + u + ".map")
-            self.users.users.append(new_user)
+            if "DS_Store" not in u:
+                new_user = self.users.create_user(self.s, userid=u)
+                new_user.from_user_map(self.s["users_dir"] + u + "/" + u + ".map")
+                self.users.users.append(new_user)
 
     # read the pages json into an object
     def read_site_map(self, filename):
@@ -550,7 +568,7 @@ class Trido:
             self.pages = json.load(f)
 
         # read in settings (there's got to be a better way of doing this)
-        fields = ['macros_file', 'publish_file', 'content_dir', 'template_dir', 'output_dir', 'postmaps_dir', 'server', 'usermaps_dir', 'users_dir']
+        fields = ['macros_file', 'publish_file', 'content_dir', 'template_dir', 'output_dir', 'postmaps_dir', 'assets_location', 'server', 'usermaps_dir', 'users_dir']
         for f in fields:
             if self.pages.get(f):
                 self.s[f] = self.pages.get(f)
@@ -688,7 +706,7 @@ class Trido:
                     print("Copying " + i + " to " + output + i)
                 shutil.copy2(i, output)
         # copy a backup of default post maps
-        shutil.copytree(self.s['postmaps_dir'], self.s['output_dir'] + 'content/defaultposts/', dirs_exist_ok=True)
+        #shutil.copytree(self.s['postmaps_dir'], self.s['output_dir'] + 'content/defaultposts/')
         os.makedirs(self.s['output_dir'] + 'content/posts/', exist_ok=True)
 
     # export compiled site to specified directory

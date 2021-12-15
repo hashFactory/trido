@@ -15,6 +15,7 @@ body, html {
     display: flex;
     height: 100%;
     flex-direction: column;
+    overflow-x: hidden;
     /* background-color: rgba(128, 128, 128, 0.2); */
 }
 
@@ -48,7 +49,6 @@ header {
 /* project */
 .project {
     border-bottom: 1px dashed "|TEXTCOLOR|";
-    margin-bottom: 10px;
     padding-bottom: 20px;
     margin-left: 10px;
     margin-right: 10px;
@@ -69,14 +69,19 @@ details:focus {
     -webkit-appearance: none;
     outline: none !important;
 }
-#submit-area {
-    flex: none;
-    bottom: 0;
-    margin: 0 auto;
-}
-.project details {
+.project-body > details {
     font-size: 100%;
     margin-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+#page-title details {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+#project-list > .project:last-child {
+    padding-bottom: 10px;
+    border-bottom: none;
 }
 .project textarea {
     max-width: 100%;
@@ -87,10 +92,27 @@ details:focus {
 .project br {
     padding: 10px;
 }
-.project ul {
+/*.project-body > ul {
     padding-left: 10px;
     padding-right: 10px;
+
+}*/
+#settings-area  {
+    flex: none;
+    bottom: 0;
+    max-height: 80%;
+    overflow: hidden;
+    margin: 0;
+
 }
+#settings-area[open] {
+    max-height: 80%;
+}
+#settings-area .scrollable {
+    overflow: scroll;
+    padding: 5px 10px 10px 5px;
+}
+
 .button {
     text-align: center;
     width: auto;
@@ -105,10 +127,12 @@ details:focus {
     border: 1px solid "|TEXTCOLOR|";
     color: "|TEXTCOLOR|";
     background-color: "|BGCOLOR|";
+    width: 100%;
 }
 .field {
     text-align: left;
-    width: 200px;
+    width: 100%;
+    max-width: 400px;
     border: 1px solid "|TEXTCOLOR|";
     font-weight: bold;
     color: "|TEXTCOLOR|";
@@ -154,15 +178,34 @@ details:focus {
     max-width: 720px;
     height: auto;
 }
+#project-list > .project {
+    margin-bottom: 10px;
+}
 
+.box {
+
+}
+ul.box {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+details > ul {
+    padding-left: 15px;
+    padding-right: 15px;
+}
 /* gallery */
-.gallery {
+.gallery  {
+    padding: 0 !important;
+}
+
+.gallery ul {
     display: -webkit-flex;
     display: flex;
     flex-wrap: wrap;
     list-style: none;
-    margin-top: 10px;
-    padding: 0px !important;
+    margin: 0;
+    padding: 0 !important;
 }
 
 .gallery li {
@@ -182,10 +225,16 @@ details:focus {
     min-width: 20%;
 }
 
-.gallery-wide {
+.gallery-wide li {
+    flex-basis: 100%;
     max-height: 100%;
     max-width: 100%;
     min-width: 20%;
+}
+
+details.gallery[open] {
+    width: 100%;
+    height: 100%;
 }
 
 .border {
@@ -281,7 +330,7 @@ section {
 nav {
     float: left;
     width: 20%;
-    background: #ccc;
+    background: "|BGCOLOR|";
     padding: 0px;
     flex-shrink: 0;
     flex-grow: 1;
@@ -297,20 +346,19 @@ nav ul {
 
 nav ul li {
     display: block;
-    min-height: 35px;
     border-bottom: 1px solid black;
 }
 
 nav ul li a {
     font-family: sans-serif;
-    color: #330033;
+    color: "|TEXTCOLOR|";
     text-decoration: none;
     padding-left: 5px;
 }
 
 nav ul li a p {
     font-family: sans-serif;
-    color: #330033;
+    color: "|TEXTCOLOR|";
     text-decoration: none;
     text-align: center;
 }
@@ -360,7 +408,7 @@ section {
 
 /* make it reactive */
 @media only screen and (max-width: 620px) {
-    section {
+    #page {
         -webkit-flex-direction: column;
         flex-direction: column;
         flex-grow: 1;
@@ -432,13 +480,13 @@ section {
         background-color: #111;
     }
     nav {
-        background-color: #38313b;
+        background-color: "|BGCOLOR|";
     }
     nav ul li {
-        border-bottom: 1px solid #f6f2f7;
+        border-bottom: 1px solid "|TEXTCOLOR|";
     }
     nav ul li a {
-        color: #f6f2f7;
+        color: "|TEXTCOLOR|";
     }
     nav ul li svg {
         stroke: #f6f2f7;
@@ -462,6 +510,9 @@ section {
         color: "|TITLECOLOR|";
     }
     .basic-link {
+        color: "|TITLECOLOR|";
+    }
+    .project-body > a {
         color: "|TITLECOLOR|";
     }
 }

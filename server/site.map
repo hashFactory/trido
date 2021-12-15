@@ -5,8 +5,9 @@
     "template_dir": "primitives/",
     "postmaps_dir": "content/postmaps/",
     "users_dir": "users/",
-    "output_dir": "../local6/",
-    "server": "http://leda.usbx.me:10952/",
+    "output_dir": "../local/",
+    "assets_location": "|SERVER|assets/",
+    "server": "http://192.168.1.17:10952/",
     "pages": [
         {
             "name": "home",
@@ -17,17 +18,14 @@
     ],
     "include": [
         "robots.txt",
-        "main.css",
         "favicon.ico",
         "assets/",
-        "media/",
         "htbin/",
         "process.py",
         "site.map",
         "macros.map",
         "primitives/",
         "content/",
-        "submitpost.html",
         "serve.py",
         "users/"
     ],
